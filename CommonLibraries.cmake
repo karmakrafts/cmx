@@ -36,6 +36,28 @@ macro(include_scripts)
     endif ()
 endmacro()
 
+# GoogleTest
+set(CL_GTEST_VERSION 1.13.0)
+set(CL_GTEST_FETCHED OFF)
+
+macro(target_include_gtest target)
+    if (NOT CL_GTEST_FETCHED)
+        FetchContent_Declare(
+                googletest
+                GIT_REPOSITORY https://github.com/google/googletest.git
+                GIT_TAG "v${CL_GTEST_VERSION}")
+        set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
+        FetchContent_MakeAvailable(googletest)
+
+        enable_testing(TRUE)
+        include(GoogleTest)
+        set(CL_GTEST_FETCHED ON)
+    endif ()
+
+    gtest_discover_tests(${target})
+    target_link_libraries(${target} gtest_main)
+endmacro()
+
 # SDL (Just macros since we use Find-scripts)
 macro(target_include_sdl target)
     set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;")

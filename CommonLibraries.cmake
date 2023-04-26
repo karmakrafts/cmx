@@ -58,6 +58,44 @@ macro(target_include_gtest target)
     target_link_libraries(${target} gtest_main)
 endmacro()
 
+# {fmt}
+set(CL_FMT_VERSION 9.1.0)
+set(CL_FMT_FETCHED OFF)
+
+macro(target_include_fmt target)
+    if (NOT CL_FMT_FETCHED)
+        FetchContent_Declare(
+                fmt
+                GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+                GIT_TAG ${CL_FMT_VERSION}
+        )
+        FetchContent_MakeAvailable(fmt)
+        set(CL_FMT_FETCHED ON)
+    endif ()
+
+    target_compile_definitions(${target} PUBLIC FMT_HEADER_ONLY)
+    target_include_directories(${target} PUBLIC ${CL_DEPS_DIR}/fmt-src/include)
+endmacro()
+
+# parallel_hashmap
+set(CL_PHMAP_VERSION 1.3.11)
+set(CL_PHMAP_FETCHED OFF)
+
+macro(target_include_phmap target)
+    if (NOT CL_PHMAP_FETCHED)
+        FetchContent_Declare(
+                phmap
+                GIT_REPOSITORY https://github.com/greg7mdp/parallel-hashmap.git
+                GIT_TAG "v${CL_PHMAP_VERSION}"
+        )
+        FetchContent_MakeAvailable(phmap)
+        set(CL_PHMAP_FETCHED ON)
+    endif ()
+
+    target_compile_definitions(${target} PUBLIC _SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING)
+    target_include_directories(${target} PUBLIC ${CL_DEPS_DIR}/phmap-src)
+endmacro()
+
 # SDL (Just macros since we use Find-scripts)
 macro(target_include_sdl target)
     set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;")

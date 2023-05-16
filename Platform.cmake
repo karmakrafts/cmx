@@ -1,7 +1,7 @@
 include(IncludeGuard)
 include_guard_start(PLATFORM)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang") # Do a match so we also match Apple Clang -.-
     set(COMPILER_CLANG TRUE)
     add_compile_definitions(COMPILER_CLANG)
     message(STATUS "Detected Clang compiler")

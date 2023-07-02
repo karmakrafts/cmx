@@ -87,7 +87,7 @@ if(NOT PLATFORM_SETUP)
     
         find_program(MOLD_EXECUTABLE "mold")
     
-        if(MOLD_EXECUTABLE)
+        if(MOLD_EXECUTABLE AND NOT COMPILER_CLANG) # mold doesn't work with Clang properly yet..
             message(STATUS "Detected mold linker, substituting")
     
             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=mold")

@@ -3,13 +3,13 @@ include(Platform)
 set(CL_DEPS_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps")
 
 # CMake Scripts
-set(CL_SCRIPTS_VERSION 23.04)
+set(CL_SCRIPTS_VERSION 23.06)
 
 macro(include_scripts)
     FetchContent_Declare(
         cmake_scripts
         GIT_REPOSITORY https://github.com/StableCoder/cmake-scripts.git
-        GIT_TAG ${KSTD_SCRIPTS_VERSION})
+        GIT_TAG ${CL_SCRIPTS_VERSION})
     FetchContent_Populate(cmake_scripts)
 
     set(CMAKE_MODULE_PATH "${CL_DEPS_DIR}/cmake_scripts-src;")

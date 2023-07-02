@@ -1,6 +1,3 @@
-include(IncludeGuard)
-include_guard_start(PLATFORM)
-
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang") # Do a match so we also match Apple Clang -.-
     set(COMPILER_CLANG TRUE)
     add_compile_definitions(COMPILER_CLANG)
@@ -134,5 +131,3 @@ endif ()
 string(TOLOWER ${PLATFORM} LC_PLATFORM)
 set(PLATFORM_PAIR "${LC_PLATFORM}-${CPU_ARCH}")
 message(STATUS "Determined platform pair '${PLATFORM_PAIR}'")
-
-include_guard_end(PLATFORM)

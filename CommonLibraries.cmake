@@ -1,6 +1,3 @@
-include(IncludeGuard)
-include_guard_start(COMMON_LIBS)
-
 include(FetchContent)
 include(Platform)
 set(CL_DEPS_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps")
@@ -131,5 +128,3 @@ macro(target_include_sdl_net target)
     target_include_directories(${target} PUBLIC ${SDL2_NET_INCLUDE_DIR})
     target_link_libraries(${target} ${SDL2_NET_LIBRARIES})
 endmacro()
-
-include_guard_end(COMMON_LIBS)

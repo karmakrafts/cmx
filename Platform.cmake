@@ -10,7 +10,7 @@ if(NOT PLATFORM_SETUP)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         set(COMPILER_MSVC TRUE)
         add_compile_definitions(COMPILER_MSVC)
-    	add_compile_options("/Zc:__cplusplus") # Enable updated __cplusplus macro definition
+    	add_compile_options("/Zc:__cplusplus" "/utf-8") # Enable updated __cplusplus macro definition
         message(STATUS "Detected MSVC compiler")
     endif ()
     

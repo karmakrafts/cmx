@@ -62,6 +62,7 @@ if(NOT PLATFORM_SETUP)
         set(PLATFORM_DLIB_EXT "dll")
         set(PLATFORM_LIB_PREFIX "")
         add_compile_definitions(PLATFORM_WINDOWS)
+		link_libraries(kernel32 user32 shell32 ws2_32 onecore) # Link common system libraries
         message(STATUS "Detected Windows operating system")
     elseif (APPLE)
         set(PLATFORM "MacOS")

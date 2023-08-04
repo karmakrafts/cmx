@@ -53,7 +53,10 @@ macro(target_include_fmt target)
         GIT_TAG ${CL_FMT_VERSION}
     )
     FetchContent_MakeAvailable(fmt)
-    target_compile_definitions(${target} PUBLIC FMT_HEADER_ONLY)
+    target_compile_definitions(${target} PUBLIC
+		FMT_HEADER_ONLY=1
+		FMT_EXCEPTIONS=0
+		FMT_NOEXCEPT=1)
     target_include_directories(${target} PUBLIC ${CL_DEPS_DIR}/fmt-src/include)
 endmacro()
 

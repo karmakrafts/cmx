@@ -16,8 +16,8 @@ if(NOT ZLIB_INCLUDED)
         endif() # ZLIB_FETCHED
 
         target_include_directories(${target} PUBLIC "${CL_DEPS_DIR}/zlib-src")
-        target_link_libraries(${target} PUBLIC zlib::zlibstatic)
-        add_dependencies(${target} zlib::zlibstatic)
+        target_link_libraries(${target} PUBLIC zlibstatic)
+        add_dependencies(${target} zlibstatic)
     endmacro()
 
     set(ZLIB_INCLUDED ON)

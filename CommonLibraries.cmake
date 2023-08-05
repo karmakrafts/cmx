@@ -2,11 +2,11 @@ if(NOT COMMON_LIBRARIES_INCLUDED)
     include(FetchContent)
     include(Platform)
     set(CL_DEPS_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps")
-    
+
     # CMake Scripts
     set(CL_SCRIPTS_VERSION 23.06)
     set(CL_SCRIPTS_FETCHED OFF)
-    
+
     macro(include_scripts)
         if(NOT CL_SCRIPTS_FETCHED)
             FetchContent_Declare(
@@ -16,13 +16,13 @@ if(NOT COMMON_LIBRARIES_INCLUDED)
             FetchContent_Populate(cmake-scripts)
             set(CL_SCRIPTS_FETCHED ON)
         endif() # CL_SCRIPTS_FETCHED
-    
+
         set(CMAKE_MODULE_PATH "${CL_DEPS_DIR}/cmake-scripts-src;")
         set(ENABLE_ALL_WARNINGS ON)
-    
+
         include(compiler-options)
-    
-        if (NOT COMPILER_MSVC)
+
+        if (NOT COMPILER_MSVC AND NOT (PLATFORM_WINDOWS AND COMPILER_CLANG))
             if(${BUILD_DEBUG})
                 set(USE_SANITIZER Thread,Undefined)
             else() # BUILD_DEBUG
@@ -31,11 +31,11 @@ if(NOT COMMON_LIBRARIES_INCLUDED)
             include(sanitizers)
         endif () # COMPILER_MSVC
     endmacro()
-    
+
     # GoogleTest
     set(CL_GTEST_VERSION 1.13.0)
     set(CL_GTEST_FETCHED OFF)
-    
+
     macro(target_include_gtest target)
         set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
 

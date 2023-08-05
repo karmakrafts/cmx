@@ -16,6 +16,8 @@ if(NOT KSTD_PLATFORM_INCLUDED)
         endif() # KSTD_PLATFORM_FETCHED
 
         target_include_directories(${target} PUBLIC "${CL_DEPS_DIR}/kstd-platform-src/include")
+		target_link_libraries(${target} PUBLIC kstd-platform-static)
+		add_dependencies(${target} kstd-platform-static)
     endmacro()
 
     set(KSTD_PLATFORM_INCLUDED ON)

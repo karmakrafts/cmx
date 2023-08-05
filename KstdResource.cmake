@@ -16,8 +16,8 @@ if(NOT KSTD_RESOURCE_INCLUDED)
         endif() # KSTD_RESOURCE_FETCHED
 
         target_include_directories(${target} PUBLIC "${CL_DEPS_DIR}/kstd-resource-src/include")
-        target_link_libraries(${target} PUBLIC kstd-resource::kstd-resource-static)
-        add_dependencies(${target} kstd-resource::kstd-resource-static)
+        target_link_libraries(${target} PUBLIC kstd-resource-static)
+        add_dependencies(${target} kstd-resource-static)
     endmacro()
 
     set(KSTD_RESOURCE_INCLUDED ON)

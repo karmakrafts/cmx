@@ -1,0 +1,7 @@
+if (NOT CMX_INFER_VERSION_INCLUDED)
+	if(NOT DEFINED CMAKE_CXX_STANDARD)
+		message(STATUS "No C++ version specified, defaulting to C++20")
+		set(CMAKE_CXX_STANDARD 20)
+	endif()
+	set(CMX_INFER_VERSION_INCLUDED ON)
+endif() # CMX_INFER_VERSION_INCLUDED 

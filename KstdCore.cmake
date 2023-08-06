@@ -1,22 +1,27 @@
-if(NOT KSTD_CORE_INCLUDED)
-    include(CommonLibraries)
-
-    set(KSTD_CORE_VERSION master)
-    set(KSTD_CORE_FETCHED OFF)
+if(NOT CMX_KSTD_CORE_INCLUDED)
+    set(CMX_KSTD_CORE_VERSION master)
+    set(CMX_KSTD_CORE_FETCHED OFF)
     
     macro(target_include_kstd_core target)
-        if(NOT KSTD_CORE_FETCHED)
+        set(num_args ${ARGC})
+        if(num_args GREATER 0)
+            set(access ${ARGV1}) # Copy first optional argument
+        else()
+            set(access PUBLIC) # Default to PUBLIC
+        endif()
+
+        if(NOT CMX_KSTD_CORE_FETCHED)
             FetchContent_Declare(
                 kstd-core
                 GIT_REPOSITORY https://github.com/karmakrafts/kstd-core.git
-                GIT_TAG ${KSTD_CORE_VERSION}
+                GIT_TAG ${CMX_KSTD_CORE_VERSION}
             )
             FetchContent_MakeAvailable(kstd-core)
-            set(KSTD_CORE_FETCHED ON)
-        endif() # KSTD_CORE_FETCHED
+            set(CMX_KSTD_CORE_FETCHED ON)
+        endif() # CMX_KSTD_CORE_FETCHED
 
-        target_include_directories(${target} PUBLIC "${CL_DEPS_DIR}/kstd-core-src/include")
+        target_include_directories(${target} ${access} "${kstd-core_SOURCE_DIR}/include")
     endmacro()
 
-    set(KSTD_CORE_INCLUDED ON)
-endif() # KSTD_CORE_INCLUDED
+    set(CMX_KSTD_CORE_INCLUDED ON)
+endif() # CMX_KSTD_CORE_INCLUDED

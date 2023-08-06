@@ -1,22 +1,27 @@
-if(NOT KSTD_STREAMS_INCLUDED)
-    include(CommonLibraries)
-
-    set(KSTD_STREAMS_VERSION master)
-    set(KSTD_STREAMS_FETCHED OFF)
+if(NOT CMX_KSTD_STREAMS_INCLUDED)
+    set(CMX_KSTD_STREAMS_VERSION master)
+    set(CMX_KSTD_STREAMS_FETCHED OFF)
     
     macro(target_include_kstd_streams target)
-        if(NOT KSTD_STREAMS_FETCHED)
+        set(num_args ${ARGC})
+        if(num_args GREATER 0)
+            set(access ${ARGV1}) # Copy first optional argument
+        else()
+            set(access PUBLIC) # Default to PUBLIC
+        endif()
+
+        if(NOT CMX_KSTD_STREAMS_FETCHED)
             FetchContent_Declare(
                 kstd-streams
                 GIT_REPOSITORY https://github.com/karmakrafts/kstd-streams.git
-                GIT_TAG ${KSTD_STREAMS_VERSION}
+                GIT_TAG ${CMX_KSTD_STREAMS_VERSION}
             )
             FetchContent_MakeAvailable(kstd-streams)
-            set(KSTD_STREAMS_FETCHED ON)
-        endif() # KSTD_STREAMS_FETCHED
+            set(CMX_KSTD_STREAMS_FETCHED ON)
+        endif() # CMX_KSTD_STREAMS_FETCHED
 
-        target_include_directories(${target} PUBLIC "${CL_DEPS_DIR}/kstd-streams-src/include")
+        target_include_directories(${target} ${access} "${kstd-streams_SOURCE_DIR}/include")
     endmacro()
 
-    set(KSTD_STREAMS_INCLUDED ON)
-endif() # KSTD_STREAMS_INCLUDED
+    set(CMX_KSTD_STREAMS_INCLUDED ON)
+endif() # CMX_KSTD_STREAMS_INCLUDED

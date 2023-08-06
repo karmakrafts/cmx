@@ -1,24 +1,29 @@
-if(NOT KSTD_PLATFORM_INCLUDED)
-    include(CommonLibraries)
-
-    set(KSTD_PLATFORM_VERSION master)
-    set(KSTD_PLATFORM_FETCHED OFF)
+if(NOT CMX_KSTD_PLATFORM_INCLUDED)
+    set(CMX_KSTD_PLATFORM_VERSION master)
+    set(CMX_KSTD_PLATFORM_FETCHED OFF)
     
     macro(target_include_kstd_platform target)
-        if(NOT KSTD_PLATFORM_FETCHED)
+        set(num_args ${ARGC})
+        if(num_args GREATER 0)
+            set(access ${ARGV1}) # Copy first optional argument
+        else()
+            set(access PUBLIC) # Default to PUBLIC
+        endif()
+
+        if(NOT CMX_KSTD_PLATFORM_FETCHED)
             FetchContent_Declare(
                 kstd-platform
                 GIT_REPOSITORY https://github.com/karmakrafts/kstd-platform.git
-                GIT_TAG ${KSTD_PLATFORM_VERSION}
+                GIT_TAG ${CMX_KSTD_PLATFORM_VERSION}
             )
             FetchContent_MakeAvailable(kstd-platform)
-            set(KSTD_PLATFORM_FETCHED ON)
-        endif() # KSTD_PLATFORM_FETCHED
+            set(CMX_KSTD_PLATFORM_FETCHED ON)
+        endif() # CMX_KSTD_PLATFORM_FETCHED
 
-        target_include_directories(${target} PUBLIC "${CL_DEPS_DIR}/kstd-platform-src/include")
-		target_link_libraries(${target} PUBLIC kstd-platform-static)
-		add_dependencies(${target} kstd-platform-static)
+        target_include_directories(${target} ${access} "${kstd-platform_SOURCE_DIR}/include")
+        target_link_libraries(${target} ${access} kstd-platform-static)
+        add_dependencies(${target} kstd-platform-static)
     endmacro()
 
-    set(KSTD_PLATFORM_INCLUDED ON)
-endif() # KSTD_PLATFORM_INCLUDED
+    set(CMX_KSTD_PLATFORM_INCLUDED ON)
+endif() # CMX_KSTD_PLATFORM_INCLUDED

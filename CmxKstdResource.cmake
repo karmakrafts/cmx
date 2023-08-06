@@ -2,7 +2,7 @@ if(NOT CMX_KSTD_RESOURCE_INCLUDED)
     set(CMX_KSTD_RESOURCE_VERSION master)
     set(CMX_KSTD_RESOURCE_FETCHED OFF)
     
-    macro(target_include_kstd_resource target)
+    macro(cmx_include_kstd_resource target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

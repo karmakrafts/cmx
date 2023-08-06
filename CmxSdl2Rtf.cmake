@@ -2,7 +2,7 @@ if(NOT CMX_SDL2_RTF_INCLUDED)
     set(CMX_SDL2_RTF_VERSION CMX_SDL2)
     set(CMX_SDL2_RTF_FETCHED OFF)
     
-    macro(target_include_sdl2_rtf target)
+    macro(cmx_include_sdl2_rtf target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

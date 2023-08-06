@@ -2,7 +2,7 @@ if(NOT CMX_KSTD_STREAMS_INCLUDED)
     set(CMX_KSTD_STREAMS_VERSION master)
     set(CMX_KSTD_STREAMS_FETCHED OFF)
     
-    macro(target_include_kstd_streams target)
+    macro(cmx_include_kstd_streams target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

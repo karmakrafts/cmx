@@ -2,7 +2,7 @@ if(NOT CMX_ATOMIC_QUEUE_INCLUDED)
     set(CMX_ATOMIC_QUEUE_VERSION master)
     set(CMX_ATOMIC_QUEUE_FETCHED OFF)
     
-    macro(target_include_atomic_queue target)
+    macro(cmx_include_atomic_queue target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

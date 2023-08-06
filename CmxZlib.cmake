@@ -2,7 +2,7 @@ if(NOT CMX_ZLIB_INCLUDED)
     set(CMX_ZLIB_VERSION master)
     set(CMX_ZLIB_FETCHED OFF)
     
-    macro(target_include_zlib target)
+    macro(cmx_include_zlib target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

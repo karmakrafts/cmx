@@ -2,7 +2,7 @@ if (NOT CMX_GTEST_INCLUDED)
 	set(CMX_GTEST_VERSION 1.13.0)
     set(CMX_GTEST_FETCHED OFF)
 
-    macro(target_include_gtest target)
+    macro(cmx_include_gtest target)
     	set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

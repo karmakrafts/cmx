@@ -2,7 +2,7 @@ if(NOT CMX_STDUUID_INCLUDED)
     set(CMX_STDUUID_VERSION master)
     set(CMX_STDUUID_FETCHED OFF)
     
-    macro(target_include_stduuid target)
+    macro(cmx_include_stduuid target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

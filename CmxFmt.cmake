@@ -2,7 +2,7 @@ if (NOT CMX_FMT_INCLUDED)
     set(CMX_FMT_VERSION 10.0.0)
     set(CMX_FMT_FETCHED OFF)
     
-    macro(target_include_fmt target)
+    macro(cmx_include_fmt target)
     	set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

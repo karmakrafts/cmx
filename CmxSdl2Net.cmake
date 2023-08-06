@@ -2,7 +2,7 @@ if(NOT CMX_SDL2_NET_INCLUDED)
     set(CMX_SDL2_NET_VERSION CMX_SDL2)
     set(CMX_SDL2_NET_FETCHED OFF)
     
-    macro(target_include_sdl2_net target)
+    macro(cmx_include_sdl2_net target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

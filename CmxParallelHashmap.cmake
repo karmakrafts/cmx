@@ -2,7 +2,7 @@ if (NOT CMX_PHMAP_INCLUDED)
 	set(CMX_PHMAP_VERSION 1.3.11)
     set(CMX_PHMAP_FETCHED OFF)
     
-    macro(target_include_phmap target)
+    macro(cmx_include_phmap target)
     	set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

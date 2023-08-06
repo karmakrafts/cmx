@@ -2,7 +2,7 @@ if(NOT CMX_KSTD_IO_INCLUDED)
     set(CMX_KSTD_IO_VERSION master)
     set(CMX_KSTD_IO_FETCHED OFF)
     
-    macro(target_include_kstd_io target)
+    macro(cmx_include_kstd_io target)
         set(num_args ${ARGC})
         if(num_args GREATER 0)
             set(access ${ARGV1}) # Copy first optional argument

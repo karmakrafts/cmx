@@ -3,7 +3,7 @@ if (NOT CMX_CMAKE_SCRIPTS_INCLUDED)
 	set(CMX_CMAKE_SCRIPTS_VERSION 23.06)
     set(CMX_CMAKE_SCRIPTS_FETCHED OFF)
 
-    macro(include_scripts)
+    macro(cmx_include_scripts)
         if(NOT CMX_CMAKE_SCRIPTS_FETCHED)
             FetchContent_Declare(
                 cmake-scripts

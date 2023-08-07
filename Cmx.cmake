@@ -19,6 +19,7 @@ if (NOT CMX_INCLUDED)
 	include(CmxKstdIo)
 	include(CmxKstdResource)
 
+	include(CmxGoogleTest)
 	include(CmxFmt)
 	include(CmxAtomicQueue)
 	include(CmxParallelHashmap)

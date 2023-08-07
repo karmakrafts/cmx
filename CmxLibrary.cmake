@@ -3,9 +3,9 @@ if (NOT CMX_LIBRARY_INCLUDED)
 		set(${name}_SOURCE_FILES)
 		
 		foreach (arg IN ITEMS ${ARGN})
-			file(GLOB_RECURSE sources "${source_dir}/*.c*")
+			file(GLOB_RECURSE sources "${arg}/*.c*")
 			list(APPEND ${name}_SOURCE_FILES ${sources})
-			file(GLOB_RECURSE headers "${source_dir}/*.h*")
+			file(GLOB_RECURSE headers "${arg}/*.h*")
 			list(APPEND ${name}_SOURCE_FILES ${headers})
 		endforeach()
 

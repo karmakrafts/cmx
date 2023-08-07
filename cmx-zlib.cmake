@@ -4,7 +4,7 @@ if(NOT CMX_ZLIB_INCLUDED)
     
     macro(cmx_include_zlib target)
         set(num_args ${ARGC})
-        if(num_args GREATER 0)
+        if(num_args GREATER 1)
             set(access ${ARGV1}) # Copy first optional argument
         else()
             set(access PUBLIC) # Default to PUBLIC

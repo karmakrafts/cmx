@@ -4,7 +4,7 @@ if(NOT CMX_SDL2_NET_INCLUDED)
     
     macro(cmx_include_sdl2_net target)
         set(num_args ${ARGC})
-        if(num_args GREATER 0)
+        if(num_args GREATER 1)
             set(access ${ARGV1}) # Copy first optional argument
         else()
             set(access PUBLIC) # Default to PUBLIC

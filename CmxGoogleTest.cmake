@@ -27,9 +27,10 @@ if (NOT CMX_GTEST_INCLUDED)
         target_link_libraries(${target} ${access} gtest_main)
     endmacro()
 
-    macro(cmx_add_tests name source_dir include_dir)
+    macro(cmx_add_tests name source_dir)
         file(GLOB_RECURSE ${name}_SOURCE_FILES "${source_dir}/*.c*")
-        add_executable(${name} ${${name}_SOURCE_FILES})
+        file(GLOB_RECURSE ${name}_HEADER_FILES "${source_dir}/*.h*")
+        add_executable(${name} ${${name}_SOURCE_FILES} ${${name}_HEADER_FILES})
         cmx_include_gtest(${name})
     endmacro()
 endif() # CMX_GTEST_INCLUDED

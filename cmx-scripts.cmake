@@ -1,5 +1,5 @@
 if (NOT CMX_CMAKE_SCRIPTS_INCLUDED)
-	include(CmxPlatform)
+	include(cmx-platform)
 	set(CMX_CMAKE_SCRIPTS_VERSION 23.06)
     set(CMX_CMAKE_SCRIPTS_FETCHED OFF)
 

@@ -1,7 +1,7 @@
 if (NOT CMX_APPLICATION_INCLUDED)
-	macro(cmx_add_application name)
+	macro(cmx_add_application name header_dir)
 		set(${name}_SOURCE_FILES)
-		
+
 		foreach (arg IN ITEMS ${ARGN})
 			file(GLOB_RECURSE sources "${arg}/*.c*")
 			list(APPEND ${name}_SOURCE_FILES ${sources})
@@ -10,7 +10,10 @@ if (NOT CMX_APPLICATION_INCLUDED)
 		endforeach()
 
 		add_executable(${name} ${${name}_SOURCE_FILES})
+		target_include_directories(${name} PRIVATE ${header_dir})
+
 		add_library("${name}-static" STATIC ${${name}_SOURCE_FILES})
+		target_include_directories("${name}-static" PRIVATE ${header_dir})
 	endmacro()
 
 	set(CMX_APPLICATION_INCLUDED ON)

@@ -29,7 +29,7 @@ if (NOT CMX_GTEST_INCLUDED)
 
     macro(cmx_add_tests name)
         set(${name}_SOURCE_FILES)
-        
+
         foreach (arg IN ITEMS ${ARGN})
             file(GLOB_RECURSE sources "${arg}/*.c*")
             list(APPEND ${name}_SOURCE_FILES ${sources})

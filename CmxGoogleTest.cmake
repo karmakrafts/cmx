@@ -28,7 +28,7 @@ if (NOT CMX_GTEST_INCLUDED)
     endmacro()
 
     macro(cmx_add_tests name source_dir include_dir)
-        file(GLOB_RECURSE ${${name}_SOURCE_FILES} ${source_dir})
+        file(GLOB_RECURSE ${name}_SOURCE_FILES ${source_dir})
         add_executable(${name} ${${name}_SOURCE_FILES})
         cmx_include_gtest(${name})
     endmacro()

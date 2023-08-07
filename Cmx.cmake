@@ -26,4 +26,6 @@ if (NOT CMX_INCLUDED)
 
 	include(CmxApplication)
 	include(CmxLibrary)
+
+	set(CMX_INCLUDED ON)
 endif()

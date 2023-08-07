@@ -22,7 +22,7 @@ if (NOT CMX_GTEST_INCLUDED)
             include(GoogleTest)
             set(CMX_GTEST_FETCHED ON)
         endif() # CMX_GTEST_FETCHED
-        
+
         gtest_discover_tests(${target})
         target_link_libraries(${target} ${access} gtest_main)
     endmacro()

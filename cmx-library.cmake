@@ -1,5 +1,5 @@
 if (NOT CMX_LIBRARY_INCLUDED)
-	macro(cmx_add_library name header_dir)
+	macro(cmx_add_library name)
 		set(${name}_SOURCE_FILES)
 
 		foreach (arg IN ITEMS ${ARGN})
@@ -10,10 +10,7 @@ if (NOT CMX_LIBRARY_INCLUDED)
 		endforeach()
 
 		add_library(${name} SHARED ${${name}_SOURCE_FILES})
-		target_include_directories(${name} PRIVATE ${header_dir})
-
 		add_library("${name}-static" STATIC ${${name}_SOURCE_FILES})
-		target_include_directories("${name}-static" PRIVATE ${header_dir})
 	endmacro()
 
 	set(CMX_LIBRARY_INCLUDED ON)

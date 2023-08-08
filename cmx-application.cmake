@@ -1,5 +1,5 @@
 if (NOT CMX_APPLICATION_INCLUDED)
-	macro(cmx_add_application name header_dir)
+	macro(cmx_add_application name)
 		set(${name}_SOURCE_FILES)
 
 		foreach (arg IN ITEMS ${ARGN})
@@ -10,10 +10,7 @@ if (NOT CMX_APPLICATION_INCLUDED)
 		endforeach()
 
 		add_executable(${name} ${${name}_SOURCE_FILES})
-		target_include_directories(${name} PRIVATE ${header_dir})
-
 		add_library("${name}-static" STATIC ${${name}_SOURCE_FILES})
-		target_include_directories("${name}-static" PRIVATE ${header_dir})
 	endmacro()
 
 	set(CMX_APPLICATION_INCLUDED ON)

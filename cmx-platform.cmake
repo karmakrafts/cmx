@@ -68,7 +68,8 @@ if(NOT CMX_PLATFORM_INCLUDED)
             user32.lib 
             Advapi32.lib 
             Ws2_32.lib 
-            OneCore.lib) # Link common system libraries
+            OneCore.lib
+	    dnsapi.lib) # Link common system libraries
         
         message(STATUS "Detected Windows operating system")
     elseif (APPLE)

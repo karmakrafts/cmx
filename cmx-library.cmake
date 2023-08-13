@@ -1,5 +1,5 @@
 if (NOT CMX_LIBRARY_INCLUDED)
-	macro(cmx_add_library type name)
+	macro(cmx_add_library name type)
 		set(${name}_source_files)
 
 		foreach (arg IN ITEMS ${ARGN})

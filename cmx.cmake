@@ -21,6 +21,8 @@ if (NOT CMX_INCLUDED)
 
 	include(cmx-google-test)
 	include(cmx-fmt)
+	include(cmx-marl)
+	include(cmx-dawn)
 	include(cmx-atomic-queue)
 	include(cmx-parallel-hashmap)
 	include(cmx-zlib)

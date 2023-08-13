@@ -20,7 +20,8 @@ if(NOT CMX_KSTD_CORE_INCLUDED)
             set(CMX_KSTD_CORE_FETCHED ON)
         endif() # CMX_KSTD_CORE_FETCHED
 
-        target_include_directories(${target} ${access} "${kstd-core_SOURCE_DIR}/include")
+        target_link_libraries(${target} ${access} kstd-core)
+        add_dependencies(${target} kstd-core)
     endmacro()
 
     set(CMX_KSTD_CORE_INCLUDED ON)

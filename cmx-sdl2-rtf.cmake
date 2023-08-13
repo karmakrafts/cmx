@@ -17,10 +17,10 @@ if(NOT CMX_SDL2_RTF_INCLUDED)
                 GIT_TAG ${CMX_SDL2_RTF_VERSION}
             )
             FetchContent_MakeAvailable(sdl2-rtf)
+            add_subdirectory(${sdl2-rtf_SOURCE_DIR})
             set(CMX_SDL2_RTF_FETCHED ON)
         endif() # CMX_SDL2_RTF_FETCHED
 
-        target_include_directories(${target} ${access} "${sdl2-rtf_SOURCE_DIR}/include")
         target_link_libraries(${target} ${access} SDL2_rtf)
         add_dependencies(${target} SDL2_rtf)
     endmacro()

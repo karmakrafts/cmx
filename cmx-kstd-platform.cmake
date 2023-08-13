@@ -17,12 +17,12 @@ if(NOT CMX_KSTD_PLATFORM_INCLUDED)
                 GIT_TAG ${CMX_KSTD_PLATFORM_VERSION}
             )
             FetchContent_MakeAvailable(kstd-platform)
+            add_subdirectory(${kstd-platform_SOURCE_DIR})
             set(CMX_KSTD_PLATFORM_FETCHED ON)
         endif() # CMX_KSTD_PLATFORM_FETCHED
 
-        target_include_directories(${target} ${access} "${kstd-platform_SOURCE_DIR}/include")
-        target_link_libraries(${target} ${access} kstd-platform-static)
-        add_dependencies(${target} kstd-platform-static)
+        target_link_libraries(${target} ${access} kstd-platform)
+        add_dependencies(${target} kstd-platform)
     endmacro()
 
     set(CMX_KSTD_PLATFORM_INCLUDED ON)

@@ -17,10 +17,12 @@ if(NOT CMX_KSTD_REFLECT_INCLUDED)
                 GIT_TAG ${CMX_KSTD_REFLECT_VERSION}
             )
             FetchContent_MakeAvailable(kstd-reflect)
+            add_subdirectory(${kstd-reflect_SOURCE_DIR})
             set(CMX_KSTD_REFLECT_FETCHED ON)
         endif() # CMX_KSTD_REFLECT_FETCHED
 
-        target_include_directories(${target} ${access} "${kstd-reflect_SOURCE_DIR}/include")
+        target_link_libraries(${target} ${access} kstd-reflect)
+        add_dependencies(${target} kstd-reflect)
     endmacro()
 
     set(CMX_KSTD_REFLECT_INCLUDED ON)

@@ -17,12 +17,12 @@ if(NOT CMX_KSTD_IO_INCLUDED)
                 GIT_TAG ${CMX_KSTD_IO_VERSION}
             )
             FetchContent_MakeAvailable(kstd-io)
+            add_subdirectory(${kstd-io_SOURCE_DIR})
             set(CMX_KSTD_IO_FETCHED ON)
         endif() # CMX_KSTD_IO_FETCHED
 
-        target_include_directories(${target} ${access} "${kstd-io_SOURCE_DIR}/include")
-        target_link_libraries(${target} ${access} kstd-io-static)
-        add_dependencies(${target} kstd-io-static)
+        target_link_libraries(${target} ${access} kstd-io)
+        add_dependencies(${target} kstd-io)
     endmacro()
 
     set(CMX_KSTD_IO_INCLUDED ON)

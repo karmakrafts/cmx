@@ -1,5 +1,5 @@
 if(NOT CMX_MARL_INCLUDED)
-    set(CMX_MARL_VERSION master)
+    set(CMX_MARL_VERSION main)
     set(CMX_MARL_FETCHED OFF)
     
     macro(cmx_include_marl target)
@@ -17,10 +17,12 @@ if(NOT CMX_MARL_INCLUDED)
                 GIT_TAG ${CMX_MARL_VERSION}
             )
             FetchContent_MakeAvailable(marl)
+            add_subdirectory(${marl_SOURCE_DIR})
             set(CMX_MARL_FETCHED ON)
         endif() # CMX_MARL_FETCHED
 
-        target_include_directories(${target} ${access} "${marl_SOURCE_DIR}/include")
+        target_link_libraries(${target} ${access} marl)
+        add_dependencies(${target} marl)
     endmacro()
 
     set(CMX_MARL_INCLUDED ON)

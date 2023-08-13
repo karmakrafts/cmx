@@ -17,10 +17,10 @@ if(NOT CMX_SDL2_INCLUDED)
                 GIT_TAG ${CMX_SDL2_VERSION}
             )
             FetchContent_MakeAvailable(sdl2)
+            add_subdirectory(${sdl2_SOURCE_DIR})
             set(CMX_SDL2_FETCHED ON)
         endif() # CMX_SDL2_FETCHED
 
-        target_include_directories(${target} ${access} "${sdl2_SOURCE_DIR}/include")
         target_link_libraries(${target} ${access} SDL2-static)
         add_dependencies(${target} SDL2-static)
     endmacro()

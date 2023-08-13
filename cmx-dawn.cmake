@@ -1,5 +1,5 @@
 if(NOT CMX_DAWN_INCLUDED)
-    set(CMX_DAWN_VERSION master)
+    set(CMX_DAWN_VERSION main)
     set(CMX_DAWN_FETCHED OFF)
     
     macro(cmx_include_dawn target)
@@ -17,10 +17,12 @@ if(NOT CMX_DAWN_INCLUDED)
                 GIT_TAG ${CMX_DAWN_VERSION}
             )
             FetchContent_MakeAvailable(dawn)
+            add_subdirectory(${dawn_SOURCE_DIR})
             set(CMX_DAWN_FETCHED ON)
         endif() # CMX_DAWN_FETCHED
 
-        target_include_directories(${target} ${access} "${dawn_SOURCE_DIR}/include")
+        target_link_libraries(${target} ${access} dawncpp)
+        add_dependencies(${target} dawncpp)
     endmacro()
 
     set(CMX_DAWN_INCLUDED ON)

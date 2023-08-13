@@ -28,16 +28,18 @@ if (NOT CMX_GTEST_INCLUDED)
     endmacro()
 
     macro(cmx_add_tests name)
-        set(${name}_SOURCE_FILES)
+        set(${name}_source_files)
 
         foreach (arg IN ITEMS ${ARGN})
             file(GLOB_RECURSE sources "${arg}/*.c*")
-            list(APPEND ${name}_SOURCE_FILES ${sources})
+            list(APPEND ${name}_source_files ${sources})
             file(GLOB_RECURSE headers "${arg}/*.h*")
-            list(APPEND ${name}_SOURCE_FILES ${headers})
+            list(APPEND ${name}_source_files ${headers})
         endforeach()
 
-        add_executable(${name} ${${name}_SOURCE_FILES})
+        add_executable(${name} ${${name}_source_files})
         cmx_include_gtest(${name} PRIVATE)
+
+        unset(${name}_source_files)
     endmacro()
 endif() # CMX_GTEST_INCLUDED

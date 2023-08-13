@@ -17,12 +17,12 @@ if(NOT CMX_KSTD_RESOURCE_INCLUDED)
                 GIT_TAG ${CMX_KSTD_RESOURCE_VERSION}
             )
             FetchContent_MakeAvailable(kstd-resource)
+            add_subdirectory(${kstd-resource_SOURCE_DIR})
             set(CMX_KSTD_RESOURCE_FETCHED ON)
         endif() # CMX_KSTD_RESOURCE_FETCHED
 
-        target_include_directories(${target} ${access} "${kstd-resource_SOURCE_DIR}/include")
-        target_link_libraries(${target} ${access} kstd-resource-static)
-        add_dependencies(${target} kstd-resource-static)
+        target_link_libraries(${target} ${access} kstd-resource)
+        add_dependencies(${target} kstd-resource)
     endmacro()
 
     set(CMX_KSTD_RESOURCE_INCLUDED ON)

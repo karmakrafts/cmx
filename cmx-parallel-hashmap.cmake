@@ -17,10 +17,12 @@ if (NOT CMX_PHMAP_INCLUDED)
                 GIT_TAG "v${CMX_PHMAP_VERSION}"
             )
             FetchContent_MakeAvailable(phmap)
+            add_subdirectory(${phmap_SOURCE_DIR})
             set(CMX_PHMAP_FETCHED ON)
         endif() # CMX_PHMAP_FETCHED
 
         target_compile_definitions(${target} ${access} _SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING)
-        target_include_directories(${target} ${access} ${phmap_SOURCE_DIR})
+        target_link_libraries(${target} ${access} phmap)
+        add_dependencies(${target} phmap)
     endmacro()
 endif() # CMX_PHMAP_INCLUDED

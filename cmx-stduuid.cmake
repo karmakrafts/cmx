@@ -17,10 +17,12 @@ if(NOT CMX_STDUUID_INCLUDED)
                 GIT_TAG ${CMX_STDUUID_VERSION}
             )
             FetchContent_MakeAvailable(stduuid)
+            add_subdirectory(${stduuid_SOURCE_DIR})
             set(CMX_STDUUID_FETCHED ON)
         endif() # CMX_STDUUID_FETCHED
 
-        target_include_directories(${target} ${access} "${stduuid_SOURCE_DIR}/include")
+        target_link_libraries(${target} ${access} stduuid)
+        add_dependencies(${target} stduuid)
     endmacro()
 
     set(CMX_STDUUID_INCLUDED ON)

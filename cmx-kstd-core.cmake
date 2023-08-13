@@ -17,6 +17,7 @@ if(NOT CMX_KSTD_CORE_INCLUDED)
                 GIT_TAG ${CMX_KSTD_CORE_VERSION}
             )
             FetchContent_MakeAvailable(kstd-core)
+            add_subdirectory(${kstd-core_SOURCE_DIR})
             set(CMX_KSTD_CORE_FETCHED ON)
         endif() # CMX_KSTD_CORE_FETCHED
 

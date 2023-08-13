@@ -17,7 +17,6 @@ if(NOT CMX_LIBWEBP_INCLUDED)
                 GIT_TAG ${CMX_LIBWEBP_VERSION}
             )
             FetchContent_MakeAvailable(libwebp)
-            add_subdirectory(${libwebp_SOURCE_DIR})
             set(CMX_LIBWEBP_FETCHED ON)
         endif() # CMX_LIBWEBP_FETCHED
 

@@ -17,7 +17,6 @@ if(NOT CMX_DXS_COMPILER_INCLUDED)
                 GIT_TAG ${CMX_DXS_COMPILER_VERSION}
             )
             FetchContent_MakeAvailable(dxs-compiler)
-            add_subdirectory(${dxs-compiler_SOURCE_DIR})
             set(CMX_DXS_COMPILER_FETCHED ON)
         endif() # CMX_DXS_COMPILER_FETCHED
 

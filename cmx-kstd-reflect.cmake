@@ -17,7 +17,6 @@ if(NOT CMX_KSTD_REFLECT_INCLUDED)
                 GIT_TAG ${CMX_KSTD_REFLECT_VERSION}
             )
             FetchContent_MakeAvailable(kstd-reflect)
-            add_subdirectory(${kstd-reflect_SOURCE_DIR})
             set(CMX_KSTD_REFLECT_FETCHED ON)
         endif() # CMX_KSTD_REFLECT_FETCHED
 

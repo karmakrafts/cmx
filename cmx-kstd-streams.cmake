@@ -17,7 +17,6 @@ if(NOT CMX_KSTD_STREAMS_INCLUDED)
                 GIT_TAG ${CMX_KSTD_STREAMS_VERSION}
             )
             FetchContent_MakeAvailable(kstd-streams)
-            add_subdirectory(${kstd-streams_SOURCE_DIR})
             set(CMX_KSTD_STREAMS_FETCHED ON)
         endif() # CMX_KSTD_STREAMS_FETCHED
 

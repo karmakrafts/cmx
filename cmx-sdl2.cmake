@@ -17,7 +17,6 @@ if(NOT CMX_SDL2_INCLUDED)
                 GIT_TAG ${CMX_SDL2_VERSION}
             )
             FetchContent_MakeAvailable(sdl2)
-            add_subdirectory(${sdl2_SOURCE_DIR})
             set(CMX_SDL2_FETCHED ON)
         endif() # CMX_SDL2_FETCHED
 

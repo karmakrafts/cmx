@@ -17,7 +17,6 @@ if(NOT CMX_SPIRV_REFLECT_INCLUDED)
                 GIT_TAG ${CMX_SPIRV_REFLECT_VERSION}
             )
             FetchContent_MakeAvailable(spirv-reflect)
-            add_subdirectory(${spirv-reflect_SOURCE_DIR})
             set(CMX_SPIRV_REFLECT_FETCHED ON)
         endif() # CMX_SPIRV_REFLECT_FETCHED
 

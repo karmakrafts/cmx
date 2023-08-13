@@ -17,7 +17,6 @@ if(NOT CMX_KSTD_IO_INCLUDED)
                 GIT_TAG ${CMX_KSTD_IO_VERSION}
             )
             FetchContent_MakeAvailable(kstd-io)
-            add_subdirectory(${kstd-io_SOURCE_DIR})
             set(CMX_KSTD_IO_FETCHED ON)
         endif() # CMX_KSTD_IO_FETCHED
 

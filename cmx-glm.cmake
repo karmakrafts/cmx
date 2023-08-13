@@ -17,7 +17,6 @@ if(NOT CMX_GLM_INCLUDED)
                 GIT_TAG ${CMX_GLM_VERSION}
             )
             FetchContent_MakeAvailable(glm)
-            add_subdirectory(${glm_SOURCE_DIR})
             set(CMX_GLM_FETCHED ON)
         endif() # CMX_GLM_FETCHED
 

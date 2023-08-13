@@ -17,7 +17,6 @@ if(NOT CMX_CXXOPTS_INCLUDED)
                 GIT_TAG ${CMX_CXXOPTS_VERSION}
             )
             FetchContent_MakeAvailable(cxxopts)
-            add_subdirectory(${cxxopts_SOURCE_DIR})
             set(CMX_CXXOPTS_FETCHED ON)
         endif() # CMX_CXXOPTS_FETCHED
 

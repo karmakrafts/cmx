@@ -17,7 +17,6 @@ if(NOT CMX_TERMCOLOR_INCLUDED)
                 GIT_TAG ${CMX_TERMCOLOR_VERSION}
             )
             FetchContent_MakeAvailable(termcolor)
-            add_subdirectory(${termcolor_SOURCE_DIR})
             set(CMX_TERMCOLOR_FETCHED ON)
         endif() # CMX_TERMCOLOR_FETCHED
 

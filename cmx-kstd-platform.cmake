@@ -17,7 +17,6 @@ if(NOT CMX_KSTD_PLATFORM_INCLUDED)
                 GIT_TAG ${CMX_KSTD_PLATFORM_VERSION}
             )
             FetchContent_MakeAvailable(kstd-platform)
-            add_subdirectory(${kstd-platform_SOURCE_DIR})
             set(CMX_KSTD_PLATFORM_FETCHED ON)
         endif() # CMX_KSTD_PLATFORM_FETCHED
 

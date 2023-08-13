@@ -17,7 +17,6 @@ if(NOT CMX_KSTD_RESOURCE_INCLUDED)
                 GIT_TAG ${CMX_KSTD_RESOURCE_VERSION}
             )
             FetchContent_MakeAvailable(kstd-resource)
-            add_subdirectory(${kstd-resource_SOURCE_DIR})
             set(CMX_KSTD_RESOURCE_FETCHED ON)
         endif() # CMX_KSTD_RESOURCE_FETCHED
 

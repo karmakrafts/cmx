@@ -17,7 +17,6 @@ if(NOT CMX_LIBPNG_INCLUDED)
                 GIT_TAG ${CMX_LIBPNG_VERSION}
             )
             FetchContent_MakeAvailable(libpng)
-            add_subdirectory(${libpng_SOURCE_DIR})
             set(CMX_LIBPNG_FETCHED ON)
         endif() # CMX_LIBPNG_FETCHED
 

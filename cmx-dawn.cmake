@@ -17,7 +17,6 @@ if(NOT CMX_DAWN_INCLUDED)
                 GIT_TAG ${CMX_DAWN_VERSION}
             )
             FetchContent_MakeAvailable(dawn)
-            add_subdirectory(${dawn_SOURCE_DIR})
             set(CMX_DAWN_FETCHED ON)
         endif() # CMX_DAWN_FETCHED
 

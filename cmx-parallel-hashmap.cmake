@@ -17,7 +17,6 @@ if (NOT CMX_PHMAP_INCLUDED)
                 GIT_TAG "v${CMX_PHMAP_VERSION}"
             )
             FetchContent_MakeAvailable(phmap)
-            add_subdirectory(${phmap_SOURCE_DIR})
             set(CMX_PHMAP_FETCHED ON)
         endif() # CMX_PHMAP_FETCHED
 

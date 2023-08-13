@@ -17,7 +17,6 @@ if(NOT CMX_SPDLOG_INCLUDED)
                 GIT_TAG ${CMX_SPDLOG_VERSION}
             )
             FetchContent_MakeAvailable(spdlog)
-            add_subdirectory(${spdlog_SOURCE_DIR})
             set(CMX_SPDLOG_FETCHED ON)
         endif() # CMX_SPDLOG_FETCHED
 

@@ -17,7 +17,6 @@ if(NOT CMX_ZLIB_INCLUDED)
                 GIT_TAG ${CMX_ZLIB_VERSION}
             )
             FetchContent_MakeAvailable(zlib)
-            add_subdirectory(${zlib_SOURCE_DIR})
             set(CMX_ZLIB_FETCHED ON)
         endif() # CMX_ZLIB_FETCHED
 

@@ -17,7 +17,6 @@ if(NOT CMX_SDL2_MIXER_INCLUDED)
                 GIT_TAG ${CMX_SDL2_MIXER_VERSION}
             )
             FetchContent_MakeAvailable(sdl2-mixer)
-            add_subdirectory(${sdl2-mixer_SOURCE_DIR})
             set(CMX_SDL2_MIXER_FETCHED ON)
         endif() # CMX_SDL2_MIXER_FETCHED
 

@@ -17,7 +17,6 @@ if(NOT CMX_SDL2_NET_INCLUDED)
                 GIT_TAG ${CMX_SDL2_NET_VERSION}
             )
             FetchContent_MakeAvailable(sdl2-net)
-            add_subdirectory(${sdl2-net_SOURCE_DIR})
             set(CMX_SDL2_NET_FETCHED ON)
         endif() # CMX_SDL2_NET_FETCHED
 

@@ -17,7 +17,6 @@ if(NOT CMX_LIBJPEG_TURBO_INCLUDED)
                 GIT_TAG ${CMX_LIBJPEG_TURBO_VERSION}
             )
             FetchContent_MakeAvailable(libjpeg-turbo)
-            add_subdirectory(${libjpeg-turbo_SOURCE_DIR})
             set(CMX_LIBJPEG_TURBO_FETCHED ON)
         endif() # CMX_LIBJPEG_TURBO_FETCHED
 

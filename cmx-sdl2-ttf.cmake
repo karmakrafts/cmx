@@ -17,7 +17,6 @@ if(NOT CMX_SDL2_TTF_INCLUDED)
                 GIT_TAG ${CMX_SDL2_TTF_VERSION}
             )
             FetchContent_MakeAvailable(sdl2-ttf)
-            add_subdirectory(${sdl2-ttf_SOURCE_DIR})
             set(CMX_SDL2_TTF_FETCHED ON)
         endif() # CMX_SDL2_TTF_FETCHED
 

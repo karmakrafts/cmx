@@ -17,7 +17,6 @@ if(NOT CMX_FREETYPE_INCLUDED)
                 GIT_TAG ${CMX_FREETYPE_VERSION}
             )
             FetchContent_MakeAvailable(freetype)
-            add_subdirectory(${freetype_SOURCE_DIR})
             set(CMX_FREETYPE_FETCHED ON)
         endif() # CMX_FREETYPE_FETCHED
 

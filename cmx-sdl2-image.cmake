@@ -17,7 +17,6 @@ if(NOT CMX_SDL2_IMAGE_INCLUDED)
                 GIT_TAG ${CMX_SDL2_IMAGE_VERSION}
             )
             FetchContent_MakeAvailable(sdl2-image)
-            add_subdirectory(${sdl2-image_SOURCE_DIR})
             set(CMX_SDL2_IMAGE_FETCHED ON)
         endif() # CMX_SDL2_IMAGE_FETCHED
 

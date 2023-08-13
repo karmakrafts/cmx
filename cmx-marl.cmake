@@ -17,7 +17,6 @@ if(NOT CMX_MARL_INCLUDED)
                 GIT_TAG ${CMX_MARL_VERSION}
             )
             FetchContent_MakeAvailable(marl)
-            add_subdirectory(${marl_SOURCE_DIR})
             set(CMX_MARL_FETCHED ON)
         endif() # CMX_MARL_FETCHED
 

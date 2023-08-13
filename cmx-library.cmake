@@ -10,9 +10,16 @@ if (NOT CMX_LIBRARY_INCLUDED)
 		endforeach()
 
 		string(TOLOWER "${type}" full_name)
-		add_library(${full_name} ${type} ${${name}_source_files})
+		math(EXPR num_extra_args "${ARGC} - 2" DECIMAL)
+
+		if (${num_extra_args} GREATER 0)
+			add_library(${full_name} ${type} ${${name}_source_files})
+		else()
+			add_library(${full_name} ${type})
+		endif()
 
 		unset(full_name)
+		unset(num_extra_args)
 		unset(${name}_source_files)
 	endmacro()
 

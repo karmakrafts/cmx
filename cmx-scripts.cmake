@@ -18,7 +18,7 @@ if (NOT CMX_CMAKE_SCRIPTS_INCLUDED)
 
         include(compiler-options)
 
-        if (NOT CMX_COMPILER_MSVC AND NOT (CMX_PLATFORM_WINDOWS AND CMX_COMPILER_CLANG))
+        if (NOT CMX_COMPILER_MSVC AND NOT ((CMX_PLATFORM_WINDOWS OR CMX_CPU_RISCV) AND CMX_COMPILER_CLANG))
             if(CMX_BUILD_DEBUG)
                 set(USE_SANITIZER Thread,Undefined)
             else() # CMX_BUILD_DEBUG

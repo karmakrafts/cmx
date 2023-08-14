@@ -13,7 +13,7 @@ if(NOT CMX_PLATFORM_INCLUDED)
     	add_compile_options("/Zc:__cplusplus" "/utf-8") # Enable updated __cplusplus macro definition
         message(STATUS "Detected MSVC compiler")
     endif () # CMAKE_CXX_COMPILER_ID
-    
+
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
         set(CMX_CPU_64_BIT TRUE)
         add_compile_definitions(CPU_64_BIT)
@@ -21,7 +21,7 @@ if(NOT CMX_PLATFORM_INCLUDED)
         set(CMX_CPU_64_BIT FALSE)
         add_compile_definitions(CPU_32_BIT)
     endif () # CMAKE_SIZEOF_VOID_P
-    
+
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "[aA][rR][mM]64|[aA][aA]rch64")
         set(CMX_CPU_ARCH "arm64")
         set(CMX_CPU_ARM TRUE)
@@ -51,10 +51,15 @@ if(NOT CMX_PLATFORM_INCLUDED)
         set(CMX_CPU_X86 TRUE)
         add_compile_definitions(CPU_X86)
         message(STATUS "Detected x86 based processor")
+	elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "[rR]isc[vV]64")
+		set(CMX_CPU_ARCH "riscv64")
+		set(CMX_CPU_RISCV TRUE)
+		add_compile_definitions(CPU_RISCV)
+		message(STATUS "Detected RISC-V based processor")
     else ()
         message(FATAL_ERROR "Unsupported processor architecture: ${CMAKE_SYSTEM_PROCESSOR}")
     endif () # CMAKE_SYSTEM_PROCESSOR
-    
+
     if (WIN32)
         set(CMX_PLATFORM "Windows")
         set(CMX_PLATFORM_WINDOWS TRUE)
@@ -64,10 +69,10 @@ if(NOT CMX_PLATFORM_INCLUDED)
         
         add_compile_definitions(PLATFORM_WINDOWS)
 		
-        link_libraries(kernel32.lib 
-            user32.lib 
-            Advapi32.lib 
-            Ws2_32.lib 
+        link_libraries(kernel32.lib
+            user32.lib
+            Advapi32.lib
+            Ws2_32.lib
             OneCore.lib
 	        dnsapi.lib
             gdi32.lib

@@ -20,8 +20,8 @@ if(NOT CMX_KSTD_RESOURCE_INCLUDED)
             set(CMX_KSTD_RESOURCE_FETCHED ON)
         endif() # CMX_KSTD_RESOURCE_FETCHED
 
-        target_link_libraries(${target} ${access} kstd-resource)
-        add_dependencies(${target} kstd-resource)
+        target_link_libraries(${target} ${access} kstd-resource-static)
+        add_dependencies(${target} kstd-resource-static)
     endmacro()
 
     set(CMX_KSTD_RESOURCE_INCLUDED ON)

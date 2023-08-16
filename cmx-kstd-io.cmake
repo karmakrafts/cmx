@@ -20,8 +20,8 @@ if(NOT CMX_KSTD_IO_INCLUDED)
             set(CMX_KSTD_IO_FETCHED ON)
         endif() # CMX_KSTD_IO_FETCHED
 
-        target_link_libraries(${target} ${access} kstd-io)
-        add_dependencies(${target} kstd-io)
+        target_link_libraries(${target} ${access} kstd-io-static)
+        add_dependencies(${target} kstd-io-static)
     endmacro()
 
     set(CMX_KSTD_IO_INCLUDED ON)

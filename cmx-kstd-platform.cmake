@@ -20,8 +20,8 @@ if(NOT CMX_KSTD_PLATFORM_INCLUDED)
             set(CMX_KSTD_PLATFORM_FETCHED ON)
         endif() # CMX_KSTD_PLATFORM_FETCHED
 
-        target_link_libraries(${target} ${access} kstd-platform)
-        add_dependencies(${target} kstd-platform)
+        target_link_libraries(${target} ${access} kstd-platform-static)
+        add_dependencies(${target} kstd-platform-static)
     endmacro()
 
     set(CMX_KSTD_PLATFORM_INCLUDED ON)

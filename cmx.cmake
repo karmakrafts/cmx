@@ -1,6 +1,4 @@
 if (NOT CMX_INCLUDED)
-	include(FetchContent)
-
 	include(cmx-infer-version)
 	include(cmx-platform)
 	include(cmx-scripts)

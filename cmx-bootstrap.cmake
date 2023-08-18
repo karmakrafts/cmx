@@ -1,7 +1,7 @@
 if (NOT CMX_INCLUDED)
     include(FetchContent)
     set(CMX_VERSION master)
-    
+
     FetchContent_Declare(
         cmx
         GIT_REPOSITORY https://github.com/karmakrafts/cmx.git

@@ -12,4 +12,4 @@ if (NOT CMX_INCLUDED)
     include(cmx)
 
     set(CMX_INCLUDED ON)
-endif ()// CMX_INCLUDED
+endif ()# CMX_INCLUDED

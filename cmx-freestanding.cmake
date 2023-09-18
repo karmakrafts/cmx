@@ -1,5 +1,5 @@
 if(NOT CMX_FREESTANDING_INCLUDED)
-	macro(target_set_freestanding target access)
+	macro(cmx_set_freestanding target access)
 		if(DEFINED CMX_PLATFORM_WINDOWS AND DEFINED CMX_COMPILER_MSVC)
 			message(FATAL_ERROR "Windows does not support a freestanding compilation target")
 		endif()

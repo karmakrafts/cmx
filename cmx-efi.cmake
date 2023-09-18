@@ -53,7 +53,7 @@ if (NOT CMX_EFI_INCLUDED)
             message(FATAL_ERROR
                     "Could not find one of the required system commands for ESP target ${target}"
                     "Make sure you have dd, mkfs and mtools installed")
-        endif()
+        endif ()
 
         # Parse options
         set(ov_options BOOT_FILE BLOCK_SIZE BLOCKS IMAGE_NAME)
@@ -66,7 +66,7 @@ if (NOT CMX_EFI_INCLUDED)
         endif ()
         if (NOT CMX_ESP_IMAGE_NAME)
             set(CMX_ESP_IMAGE_NAME "${target}")
-        endif()
+        endif ()
         if (NOT CMX_ESP_BLOCK_SIZE)
             set(CMX_ESP_BLOCK_SIZE 512)
         endif ()
@@ -137,22 +137,22 @@ if (NOT CMX_EFI_INCLUDED)
             # Recursively rebuild parent file path from the root to create directories
             cmake_path(GET target_path PARENT_PATH parent_path)
             if (NOT parent_path STREQUAL "")
-                if("${parent_path}" MATCHES ".*\/.*") # More than one component
+                if ("${parent_path}" MATCHES ".*\/.*") # More than one component
                     string(REPLACE "/" ";" directories "${parent_path}")
-                else() # Only one component, cheat a little
+                else () # Only one component, cheat a little
                     list(APPEND directories "${parent_path}")
-                endif()
+                endif ()
                 set(current_path "")
                 foreach (directory IN ITEMS ${directories})
                     if (NOT "${current_path}" STREQUAL "")
                         set(current_path "${current_path}/${directory}")
-                    else()
+                    else ()
                         set(current_path "${directory}")
-                    endif()
+                    endif ()
                     # If we already created this path, skip it since mmd will exit with an error
-                    if("${current_path}" IN_LIST visited_paths OR "${current_path}" MATCHES "([eE][fF][iI])(\/[bB][oO]{2}[tT])?")
+                    if ("${current_path}" IN_LIST visited_paths OR "${current_path}" MATCHES "([eE][fF][iI])(\/[bB][oO]{2}[tT])?")
                         continue()
-                    endif()
+                    endif ()
                     # Create directory and add path to list of visited paths
                     add_custom_command(
                             TARGET ${target}
@@ -177,25 +177,26 @@ if (NOT CMX_EFI_INCLUDED)
         find_program(XORRISO "xorriso")
         find_program(MKDIR "mkdir")
         find_program(CP "cp")
+        find_program(MV "mv")
 
-        if (NOT XORRISO OR NOT MKDIR OR NOT CP)
+        if (NOT XORRISO OR NOT MKDIR OR NOT CP OR NOT MV)
             message(FATAL_ERROR
                     "Could not find one of the required system commands for ISO target ${target}"
-                    "Make sure you have mkdir, cp and xorriso installed")
-        endif()
+                    "Make sure you have mkdir, cp, mv and xorriso installed")
+        endif ()
 
         # Parse options
-        set(ov_options SYSTEM_PARTITION IMAGE_NAME)
+        set(ov_options ESP_IMAGE ESP_IMAGE_NAME IMAGE_NAME)
         set(mv_options FILES)
         cmake_parse_arguments(CMX_ISO "" "${ov_options}" "${mv_options}" ${ARGN})
 
         # Handle default options
-        if (NOT CMX_ISO_SYSTEM_PARTITION)
-            message(FATAL_ERROR "ISO image target ${target} is missing SYSTEM_PARTITION property")
-        endif()
+        if (NOT CMX_ISO_ESP_IMAGE)
+            message(FATAL_ERROR "ISO image target ${target} is missing ESP_IMAGE property")
+        endif ()
         if (NOT CMX_ISO_IMAGE_NAME)
             set(CMX_ISO_IMAGE_NAME "${target}")
-        endif()
+        endif ()
 
         set(image_file "${CMX_ISO_IMAGE_NAME}.iso")
         add_custom_target(${target} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -208,10 +209,17 @@ if (NOT CMX_EFI_INCLUDED)
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
         # Copy system partition image
+        if (NOT CMX_ISO_ESP_IMAGE_NAME)
+            get_filename_component(esp_image_file ${CMX_ISO_ESP_IMAGE} NAME)
+        else ()
+            set(esp_image_file "${CMX_ISO_ESP_IMAGE_NAME}.img")
+        endif ()
+        set(esp_target_path "${target}/${esp_image_file}")
+
         add_custom_command(
                 TARGET ${target}
                 COMMAND ${CP}
-                ARGS "${CMX_ISO_SYSTEM_PARTITION}" "${target}/"
+                ARGS "${CMX_ISO_ESP_IMAGE}" "${esp_target_path}"
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
         # Copy optional files into ISO
@@ -246,7 +254,7 @@ if (NOT CMX_EFI_INCLUDED)
         add_custom_command(
                 TARGET ${target}
                 COMMAND ${XORRISO}
-                ARGS -as mkisofs -V "EFI_ISO_BOOT" -e "${CMX_ISO_SYSTEM_PARTITION}" -no-emul-boot -o "${image_file}" "${target}/"
+                ARGS -as mkisofs -V "EFI_ISO_BOOT" -e "${esp_image_file}" -no-emul-boot -o "${image_file}" "${target}/"
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 BYPRODUCTS ${image_file})
     endmacro()

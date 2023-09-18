@@ -223,7 +223,7 @@ if (NOT CMX_EFI_INCLUDED)
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
         # Copy optional files into ISO
-        foreach (kv_pair IN LISTS CMX_ESP_FILES)
+        foreach (kv_pair IN LISTS CMX_ISO_FILES)
             if (NOT "${kv_pair}" MATCHES "(.+)=(.+)")
                 message(WARNING "Malformed file pair in FILES parameter, skipping")
                 continue()

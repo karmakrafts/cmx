@@ -8,7 +8,7 @@ if (NOT CMX_EFI_INCLUDED)
         target_link_options(${target} ${access} -Wl,-L/usr/lib)
         target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
         if (DEFINED CMX_BUILD_DEBUG)
-            target_compile_options(${target} ${access} -g -ggdb)
+            target_compile_options(${target} ${access} -g1 -ggdb)
         endif ()
     endmacro()
 

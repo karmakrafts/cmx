@@ -1,7 +1,7 @@
 if(NOT CMX_FREESTANDING_INCLUDED)
 	macro(cmx_set_freestanding target access)
-		if(DEFINED CMX_PLATFORM_WINDOWS AND DEFINED CMX_COMPILER_MSVC)
-			message(FATAL_ERROR "Windows does not support a freestanding compilation target")
+		if(DEFINED CMX_COMPILER_MSVC)
+			message(FATAL_ERROR "Freestanding compilation with MSVC is not supported right now")
 		endif()
 		target_compile_options(${target} ${access}
 			-fshort-wchar

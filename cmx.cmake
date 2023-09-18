@@ -17,6 +17,7 @@ if (NOT CMX_INCLUDED)
 	include(cmx-kstd-io)
 	include(cmx-kstd-resource)
 
+	include(cmx-freestanding)
 	include(cmx-google-test)
 	include(cmx-fmt)
 	include(cmx-marl)
@@ -34,7 +35,7 @@ if (NOT CMX_INCLUDED)
 	include(cmx-freetype)
 	include(cmx-spdlog)
 	include(cmx-termcolor)
-	
+
 	include(cmx-application)
 	include(cmx-library)
 

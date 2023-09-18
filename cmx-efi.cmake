@@ -30,7 +30,8 @@ if(NOT CMX_EFI_INCLUDED)
                     COMMAND objcopy
                     ARGS -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR} $<TARGET_FILE:${target}> ${target}.efi
                     DEPENDS ${target}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})set(${target}_source_files)
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+        set(${target}_source_files)
         set(CMX_EFI_INCLUDED ON)
     endmacro()
 endif()

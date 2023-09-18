@@ -22,7 +22,7 @@ if(NOT CMX_EFI_INCLUDED)
             list(APPEND ${target}_source_files ${headers})
         endforeach ()
 
-        add_library(${target} SHARED ${target}_source_files)
+        add_library(${target} SHARED ${{target}_source_files})
         cmx_include_efi(${target} ${access})
         target_link_options(${target} ${access} -T${EFI_LD_SCRIPT} ${EFI_CRT})
 

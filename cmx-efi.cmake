@@ -8,7 +8,7 @@ if(NOT CMX_EFI_INCLUDED)
         target_link_options(${target} ${access} -Wl,-L/usr/lib)
         target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
         if (DEFINED CMX_BUILD_DEBUG)
-            target_compile_options(${target} ${access} -g -ggdb -O0)
+            target_compile_options(${target} ${access} -g -ggdb)
         endif ()
     endmacro()
 
@@ -26,53 +26,11 @@ if(NOT CMX_EFI_INCLUDED)
         cmx_include_efi(${target} ${access})
         target_link_options(${target} ${access} -T${EFI_LD_SCRIPT} ${EFI_CRT})
 
-        if (DEFINED CMX_BUILD_DEBUG)
-            add_custom_command(TARGET ${target} POST_BUILD
+        add_custom_command(TARGET ${target} POST_BUILD
                     COMMAND objcopy
-                    ARGS
-                    -j .text
-                    -j .sdata
-                    -j .data
-                    -j .dynamic
-                    -j .dynsym
-                    -j .rel
-                    -j .rela
-                    -j .reloc
-                    -j .comment
-                    -j .debug_line
-                    -j .debug_line_str
-                    -j .debug_info
-                    -j .debug_abbrev
-                    -j .debug_aranges
-                    -j .debug_str
-                    -j .debug_str_offsets
-                    -j .debug_addr
-                    -j .debug_frame
-                    -j .debug_loc
-                    -j .debug_macinfo
-                    --target=efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR}
-                    $<TARGET_FILE:${target}> ${target}.efi
+                    ARGS -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR} $<TARGET_FILE:${target}> ${target}.efi
                     DEPENDS ${target}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-        else ()
-            add_custom_command(TARGET ${target} POST_BUILD
-                    COMMAND objcopy
-                    ARGS
-                    -j .text
-                    -j .sdata
-                    -j .data
-                    -j .dynamic
-                    -j .dynsym
-                    -j .rel
-                    -j .rela
-                    -j .reloc
-                    --target=efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR}
-                    $<TARGET_FILE:${target}> ${target}.efi
-                    DEPENDS ${target}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-        endif ()
-
-        unset(${target}_source_files)
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})set(${target}_source_files)
         set(CMX_EFI_INCLUDED ON)
     endmacro()
 endif()

@@ -8,7 +8,10 @@ if (NOT CMX_INCLUDED)
         GIT_TAG ${CMX_VERSION}
     )
     FetchContent_MakeAvailable(cmx)
-    set(CMAKE_MODULE_PATH "${cmx_SOURCE_DIR};")
+
+	if (NOT "${cmx_SOURCE_DIR}" IN_LIST CMAKE_MODULE_PATH)
+		list(APPEND CMAKE_MODULE_PATH "${cmx_SOURCE_DIR}")
+	endif ()
     include(cmx)
 
     set(CMX_INCLUDED ON)

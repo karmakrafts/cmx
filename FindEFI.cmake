@@ -4,8 +4,6 @@
 # @author Hiroaki Yamamoto
 # @author Alexander Hinze
 
-include(cmx-bootstrap)
-
 set(EFI_HEADERS_DIR "efi")
 set(EFI_HEADERS_PROTOCOL_DIR "protocol")
 set(EFI_HEADERS_ARCHITECTURE_DIR "${CMAKE_HOST_SYSTEM_PROCESSOR}")

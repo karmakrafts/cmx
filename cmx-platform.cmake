@@ -147,4 +147,4 @@ endif ()
 
 string(TOLOWER ${CMX_PLATFORM} CMX_LC_PLATFORM)
 set(CMX_PLATFORM_PAIR "${CMX_LC_PLATFORM}-${CMX_CPU_ARCH}")
-message(STATUS "Determined platform pair '${CMX_PLATFORM_PAIR
+message(STATUS "Determined platform pair '${CMX_PLATFORM_PAIR}'")

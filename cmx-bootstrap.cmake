@@ -1,18 +1,16 @@
-if (NOT CMX_INCLUDED)
-    include(FetchContent)
-    set(CMX_VERSION master)
+include_guard()
 
-    FetchContent_Declare(
-        cmx
-        GIT_REPOSITORY https://github.com/karmakrafts/cmx.git
-        GIT_TAG ${CMX_VERSION}
-    )
-    FetchContent_MakeAvailable(cmx)
+include(FetchContent)
+set(CMX_VERSION master)
 
-	if (NOT "${cmx_SOURCE_DIR}" IN_LIST CMAKE_MODULE_PATH)
-		list(APPEND CMAKE_MODULE_PATH "${cmx_SOURCE_DIR}")
-	endif ()
-    include(cmx)
+FetchContent_Declare(
+    cmx
+    GIT_REPOSITORY https://github.com/karmakrafts/cmx.git
+    GIT_TAG ${CMX_VERSION}
+)
+FetchContent_MakeAvailable(cmx)
 
-    set(CMX_INCLUDED ON)
-endif ()# CMX_INCLUDED
+if (NOT "${cmx_SOURCE_DIR}" IN_LIST CMAKE_MODULE_PATH)
+    list(APPEND CMAKE_MODULE_PATH "${cmx_SOURCE_DIR}")
+endif ()
+include(cmx)

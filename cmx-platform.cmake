@@ -106,19 +106,6 @@ elseif (UNIX)
         set(CMX_PLATFORM "Unix")
         add_compile_definitions(PLATFORM_UNIX)
     endif () # UNIX AND NOT APPLE
-    find_program(CMX_MOLD_EXECUTABLE "mold")
-    if(CMX_MOLD_EXECUTABLE AND NOT CMX_COMPILER_CLANG) # mold doesn't work with Clang properly yet..
-        message(STATUS "Detected mold linker, substituting")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=mold")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=mold")
-
-        if(NOT DEFINED CMX_NUM_LINK_THREADS) # So we can pass this in via CLI
-            cmake_host_system_information(RESULT CMX_NUM_LINK_THREADS QUERY NUMBER_OF_LOGICAL_CORES)
-        endif() # NOT DEFINED NUM_LINK_THREADS
-
-        message(STATUS "Using ${CMX_NUM_LINK_THREADS} threads for linking")
-        add_link_options("LINKER:--threads,--thread-count=${CMX_NUM_LINK_THREADS}")
-    endif() # MOLD_EXECUTABLE AND NOT COMPILER_CLANG
     set(CMX_PLATFORM_UNIX TRUE)
     set(CMX_PLATFORM_SLIB_EXT "a")
     set(CMX_PLATFORM_DLIB_EXT "so")
@@ -148,3 +135,19 @@ endif ()
 string(TOLOWER ${CMX_PLATFORM} CMX_LC_PLATFORM)
 set(CMX_PLATFORM_PAIR "${CMX_LC_PLATFORM}-${CMX_CPU_ARCH}")
 message(STATUS "Determined platform pair '${CMX_PLATFORM_PAIR}'")
+
+macro (cmx_use_mold)
+    find_program(CMX_MOLD_EXECUTABLE "mold")
+    if(CMX_MOLD_EXECUTABLE AND NOT CMX_COMPILER_CLANG) # mold doesn't work with Clang properly yet..
+        message(STATUS "Detected mold linker, substituting")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=mold")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=mold")
+
+        if(NOT DEFINED CMX_NUM_LINK_THREADS) # So we can pass this in via CLI
+            cmake_host_system_information(RESULT CMX_NUM_LINK_THREADS QUERY NUMBER_OF_LOGICAL_CORES)
+        endif() # NOT DEFINED NUM_LINK_THREADS
+
+        message(STATUS "Using ${CMX_NUM_LINK_THREADS} threads for linking")
+        add_link_options("LINKER:--threads,--thread-count=${CMX_NUM_LINK_THREADS}")
+    endif() # MOLD_EXECUTABLE AND NOT COMPILER_CLANG
+endmacro ()

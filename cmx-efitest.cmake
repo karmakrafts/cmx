@@ -11,5 +11,6 @@ if(NOT CMX_EFITEST_FETCHED)
     )
     FetchContent_MakeAvailable(efitest)
     set(EFITEST_SOURCE_DIR "${efitest_SOURCE_DIR}")
+    set(EFITEST_BINARY_DIR "${efitest_BINARY_DIR}")
     set(CMX_EFITEST_FETCHED ON)
 endif() # CMX_EFITEST_FETCHED

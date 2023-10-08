@@ -1,12 +1,125 @@
 include_guard()
 
-find_package(EFI)
+# FIXME: RISCV support disabled for now due to https://sourceforge.net/p/gnu-efi/bugs/36/ re-appearing
+
+set(CMX_GNUEFI_VERSION "3.0.17")
+set(CMX_GNUEFI_CHECKSUM "832496719182e7d6a4b12bc7c0b534d2")
+set(CMX_GNUEFI_FETCHED OFF)
+
+if ("${CMX_CPU_ARCH}" STREQUAL "x86_64")
+    set(EFI_HOST_ARCH "x86_64")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "x86")
+    set(EFI_HOST_ARCH "i386")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "arm64")
+    set(EFI_HOST_ARCH "armv8")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "arm")
+    set(EFI_HOST_ARCH "armv7")
+    # elseif ("${CMX_CPU_ARCH}" STREQUAL "riscv64")
+    #     set(EFI_HOST_ARCH "riscv64")
+else ()
+    message(FATAL_ERROR "CPU architecture ${CMX_CPU_ARCH} is not supported right now")
+endif ()
+
+if (NOT EFI_TARGET_ARCH)
+    message("No target architecture specified for GNU-EFI, defaulting to ${CMX_CPU_ARCH}")
+    set(EFI_TARGET_ARCH "${CMX_CPU_ARCH}")
+endif ()
+
+if ("${EFI_TARGET_ARCH}" STREQUAL "x86_64")
+    set(EFI_BUILD_DIR_NAME "x86_64")
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "x86")
+    set(EFI_BUILD_DIR_NAME "ia32")
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
+    set(EFI_BUILD_DIR_NAME "aarch64")
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm")
+    set(EFI_BUILD_DIR_NAME "arm")
+    # elseif ("${EFI_TARGET_ARCH}" STREQUAL "riscv64")
+    #     set(EFI_BUILD_DIR_NAME "riscv64")
+else ()
+    message(FATAL_ERROR "CPU architecture ${EFI_TARGET_ARCH} is not supported right now")
+endif ()
+
+if (NOT CMX_GNUEFI_FETCHED)
+    FetchContent_Declare(
+            gnuefi
+            URL "https://deac-ams.dl.sourceforge.net/project/gnu-efi/gnu-efi-${CMX_GNUEFI_VERSION}.tar.bz2"
+            URL_HASH MD5=${CMX_GNUEFI_CHECKSUM}
+    )
+    FetchContent_MakeAvailable(gnuefi)
+    set(CMX_GNUEFI_FETCHED ON)
+endif () # CMX_GNUEFI_FETCHED
+
+set(EFI_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/gnuefi")
+if (NOT EXISTS ${EFI_BUILD_DIR})
+    file(MAKE_DIRECTORY ${EFI_BUILD_DIR})
+endif ()
+
+macro(cmx_add_efi target arch)
+    find_program(MAKE "make")
+    if (NOT MAKE)
+        message(FATAL_ERROR "Could not find make, make sure it's installed")
+    endif ()
+
+    if ("${arch}" STREQUAL "x86_64")
+        set(target_arch "x86_64")
+        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
+            set(cross_compile "x86_64-linux-gnu-")
+        endif ()
+    elseif ("${arch}" STREQUAL "x86")
+        set(target_arch "i386")
+        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
+            set(cross_compile "i686-linux-gnu-")
+        endif ()
+    elseif ("${arch}" STREQUAL "arm64")
+        set(target_arch "armv8")
+        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
+            set(cross_compile "aarch64-linux-gnu-")
+        endif ()
+    elseif ("${arch}" STREQUAL "arm")
+        set(target_arch "armv7")
+        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
+            set(cross_compile "arm-linux-gnueabihf-")
+        endif ()
+        # elseif ("${arch}" STREQUAL "riscv64")
+        #     set(target_arch "riscv64")
+        #     if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
+        #         set(cross_compile "riscv64-linux-gnu-")
+        #     endif ()
+    else ()
+        message(FATAL_ERROR "CPU architecture ${arch} is not supported right now")
+    endif ()
+
+    message(STATUS "Setting up GNU-EFI for ${target_arch}..")
+    if (cross_compile)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E env
+                HOSTARCH=${EFI_HOST_ARCH}
+                ARCH=${target_arch}
+                CROSS_COMPILE=${cross_compile}
+                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile"
+                WORKING_DIRECTORY ${EFI_BUILD_DIR}
+                OUTPUT_QUIET)
+    else ()
+        execute_process(COMMAND ${CMAKE_COMMAND} -E env
+                HOSTARCH=${EFI_HOST_ARCH}
+                ARCH=${target_arch}
+                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile"
+                WORKING_DIRECTORY ${EFI_BUILD_DIR}
+                OUTPUT_QUIET)
+    endif ()
+endmacro()
+
+cmx_add_efi(efi-x86-64 x86_64)
+# cmx_add_efi(efi-x86 x86)
+# cmx_add_efi(efi-arm64 arm64)
+# cmx_add_efi(efi-arm arm)
+# cmx_add_efi(efi-riscv64 riscv64)
+
+set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/gnuefi/${EFI_BUILD_DIR_NAME}")
 
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
-    target_include_directories(${target} ${access} ${EFI_INCLUDE_DIR})
-    target_link_libraries(${target} ${access} ${EFI_LIBRARIES})
-    target_link_options(${target} ${access} -Wl,-L/usr/lib)
+    target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
+    target_link_libraries(${target} ${access} "${EFI_TARGET_BUILD_DIR}/gnuefi/libgnuefi.a")
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)

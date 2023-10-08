@@ -1,5 +1,8 @@
 include_guard()
 
+include(ProcessorCount)
+ProcessorCount(EFI_NUM_THREADS)
+
 # FIXME: RISCV support disabled for now due to https://sourceforge.net/p/gnu-efi/bugs/36/ re-appearing
 
 set(CMX_GNUEFI_VERSION "3.0.17")
@@ -95,14 +98,14 @@ macro(cmx_add_efi target arch)
                 HOSTARCH=${EFI_HOST_ARCH}
                 ARCH=${target_arch}
                 CROSS_COMPILE=${cross_compile}
-                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile"
+                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile" -- -j ${EFI_NUM_THREADS}
                 WORKING_DIRECTORY ${EFI_BUILD_DIR}
                 OUTPUT_QUIET)
     else ()
         execute_process(COMMAND ${CMAKE_COMMAND} -E env
                 HOSTARCH=${EFI_HOST_ARCH}
                 ARCH=${target_arch}
-                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile"
+                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile" -- -j ${EFI_NUM_THREADS}
                 WORKING_DIRECTORY ${EFI_BUILD_DIR}
                 OUTPUT_QUIET)
     endif ()
@@ -114,7 +117,7 @@ cmx_add_efi(efi-x86-64 x86_64)
 # cmx_add_efi(efi-arm arm)
 # cmx_add_efi(efi-riscv64 riscv64)
 
-set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/gnuefi/${EFI_BUILD_DIR_NAME}")
+set(EFI_TARGET_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/${gnuefi_BINARY_DIR}/gnuefi/${EFI_BUILD_DIR_NAME}")
 
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})

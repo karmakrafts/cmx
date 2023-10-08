@@ -29,15 +29,15 @@ if (NOT EFI_TARGET_ARCH)
 endif ()
 
 if ("${EFI_TARGET_ARCH}" STREQUAL "x86_64")
-    set(EFI_BUILD_DIR_NAME "x86_64")
+    set(EFI_MAPPED_TARGET_ARCH "x86_64")
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "x86")
-    set(EFI_BUILD_DIR_NAME "ia32")
+    set(EFI_MAPPED_TARGET_ARCH "ia32")
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
-    set(EFI_BUILD_DIR_NAME "aarch64")
+    set(EFI_MAPPED_TARGET_ARCH "aarch64")
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm")
-    set(EFI_BUILD_DIR_NAME "arm")
+    set(EFI_MAPPED_TARGET_ARCH "arm")
     # elseif ("${EFI_TARGET_ARCH}" STREQUAL "riscv64")
-    #     set(EFI_BUILD_DIR_NAME "riscv64")
+    #     set(EFI_MAPPED_TARGET_ARCH "riscv64")
 else ()
     message(FATAL_ERROR "CPU architecture ${EFI_TARGET_ARCH} is not supported right now")
 endif ()
@@ -112,8 +112,8 @@ cmx_add_efi(efi-arm64 arm64)
 cmx_add_efi(efi-arm arm)
 # cmx_add_efi(efi-riscv64 riscv64)
 
-set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_BUILD_DIR_NAME}")
-find_file(EFI_CRT "crt0-efi-${CMAKE_HOST_SYSTEM_PROCESSOR}.o"
+set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_MAPPED_TARGET_ARCH}")
+find_file(EFI_CRT "crt0-efi-${EFI_MAPPED_TARGET_ARCH}.o"
         PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
         NO_CMAKE_ENVIRONMENT_PATH
         NO_CMAKE_FIND_ROOT_PATH
@@ -124,7 +124,7 @@ find_file(EFI_CRT "crt0-efi-${CMAKE_HOST_SYSTEM_PROCESSOR}.o"
 if (NOT EFI_CRT)
     message(FATAL_ERROR "Could not find GNU-EFI CRT")
 endif ()
-find_file(EFI_LD_SCRIPT "elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds"
+find_file(EFI_LD_SCRIPT "elf_${EFI_MAPPED_TARGET_ARCH}_efi.lds"
         PATHS "${gnuefi_SOURCE_DIR}/gnuefi"
         NO_CMAKE_ENVIRONMENT_PATH
         NO_CMAKE_FIND_ROOT_PATH

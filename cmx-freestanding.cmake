@@ -5,9 +5,9 @@ macro(cmx_set_freestanding target access)
 		message(FATAL_ERROR "Freestanding compilation with MSVC is not supported right now")
 	endif()
 	target_compile_options(${target} ${access}
+		-fPIC
 		-fshort-wchar
 		-ffreestanding
-		-fPIC
 		-fno-stack-protector
 		-mno-red-zone)
 	target_link_options(${target} ${access}

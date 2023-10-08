@@ -26,8 +26,8 @@ endif () # CMX_GNUEFI_FETCHED
 
 if (CMX_COMPILER_CLANG)
     # Force the use of LLD when using Clang, disable relro
-    set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
-    set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
 endif ()
 
 if (NOT EFI_TARGET_ARCH)

@@ -177,8 +177,8 @@ macro(cmx_include_efi target access)
     target_link_options(${target} ${access} -T${EFI_LD_SCRIPT} ${EFI_CRT})
     if ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
         target_link_options(${target} ${access}
-                -z common-page-size=4096
-                -z max-page-size=4096)
+                -zcommon-page-size=4096
+                -zmax-page-size=4096)
     endif ()
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
     if ("${EFI_TARGET_ARCH}" MATCHES "x86(_64)?")

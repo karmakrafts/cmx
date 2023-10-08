@@ -2,7 +2,8 @@ include_guard()
 
 include(ProcessorCount)
 ProcessorCount(EFI_NUM_THREADS)
-cmake_policy(SET CMP0063 NEW) 
+cmake_policy(SET CMP0063 NEW)
+cmake_policy(SET CMP0135 NEW)
 
 find_program(MAKE "make")
 if (NOT MAKE)

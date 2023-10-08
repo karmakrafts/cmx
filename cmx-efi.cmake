@@ -151,6 +151,7 @@ macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
     target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
     target_link_options(${target} ${access}
+            -static
             -Wl,-L${EFI_TARGET_BUILD_DIR}/gnuefi
             -Wl,-L${EFI_TARGET_BUILD_DIR}/lib
             -lgnuefi

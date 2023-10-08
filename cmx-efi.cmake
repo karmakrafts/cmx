@@ -132,43 +132,16 @@ else ()
     message(FATAL_ERROR "Could not find GNU-EFI LD script")
 endif ()
 
-find_file(EFI_LIBRARY "libgnuefi.a"
-        PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
-        NO_CMAKE_ENVIRONMENT_PATH
-        NO_CMAKE_FIND_ROOT_PATH
-        NO_CMAKE_PATH
-        NO_CMAKE_SYSTEM_PATH
-        NO_DEFAULT_PATH
-        NO_SYSTEM_ENVIRONMENT_PATH)
-if (EFI_LIBRARY)
-    message(STATUS "Found GNU-EFI library at ${EFI_LIBRARY}")
-else ()
-    message(FATAL_ERROR "Could not find GNU-EFI library")
-endif ()
-
-find_file(EFI_LIBRARY2 "libefi.a"
-        PATHS "${EFI_TARGET_BUILD_DIR}/lib"
-        NO_CMAKE_ENVIRONMENT_PATH
-        NO_CMAKE_FIND_ROOT_PATH
-        NO_CMAKE_PATH
-        NO_CMAKE_SYSTEM_PATH
-        NO_DEFAULT_PATH
-        NO_SYSTEM_ENVIRONMENT_PATH)
-if (EFI_LIBRARY2)
-    message(STATUS "Found GNU-EFI library at ${EFI_LIBRARY2}")
-else ()
-    message(FATAL_ERROR "Could not find GNU-EFI library")
-endif ()
-
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
     target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
     target_link_options(${target} ${access}
             -Wl,-L${EFI_TARGET_BUILD_DIR}/gnuefi
             -Wl,-L${EFI_TARGET_BUILD_DIR}/lib
+            -lgnuefi
+            -lefi
             -T${EFI_LD_SCRIPT}
             ${EFI_CRT})
-    target_link_libraries(${target} ${access} ${EFI_LIBRARY} ${EFI_LIBRARY2})
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)

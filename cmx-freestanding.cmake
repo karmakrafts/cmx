@@ -13,8 +13,8 @@ macro(cmx_set_freestanding target access)
 	target_link_options(${target} ${access}
 		-shared
 		-nostdlib
-		-z notext
-		-z norelro
+		-Wl,-z,norelro
+		-Wl,-z,notext
 		-Wl,-Bsymbolic)
 	if(DEFINED CMX_COMPILER_GCC)
 		target_link_options(${target} ${access}

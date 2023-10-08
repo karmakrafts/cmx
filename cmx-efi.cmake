@@ -52,11 +52,6 @@ if (NOT CMX_GNUEFI_FETCHED)
     set(CMX_GNUEFI_FETCHED ON)
 endif () # CMX_GNUEFI_FETCHED
 
-set(EFI_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/gnuefi")
-if (NOT EXISTS ${EFI_BUILD_DIR})
-    file(MAKE_DIRECTORY ${EFI_BUILD_DIR})
-endif ()
-
 macro(cmx_add_efi target arch)
     find_program(MAKE "make")
     if (NOT MAKE)
@@ -99,14 +94,14 @@ macro(cmx_add_efi target arch)
                 ARCH=${target_arch}
                 CROSS_COMPILE=${cross_compile}
                 ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
-                WORKING_DIRECTORY ${EFI_BUILD_DIR}
+                WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
                 OUTPUT_QUIET)
     else ()
         execute_process(COMMAND ${CMAKE_COMMAND} -E env
                 HOSTARCH=${EFI_HOST_ARCH}
                 ARCH=${target_arch}
                 ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
-                WORKING_DIRECTORY ${EFI_BUILD_DIR}
+                WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
                 OUTPUT_QUIET)
     endif ()
 endmacro()
@@ -117,12 +112,46 @@ cmx_add_efi(efi-x86-64 x86_64)
 # cmx_add_efi(efi-arm arm)
 # cmx_add_efi(efi-riscv64 riscv64)
 
-set(EFI_TARGET_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/${gnuefi_BINARY_DIR}/gnuefi/${EFI_BUILD_DIR_NAME}")
+set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_BUILD_DIR_NAME}")
+find_file(EFI_CRT "crt0-efi-${CMAKE_HOST_SYSTEM_PROCESSOR}.o"
+        PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (NOT EFI_CRT)
+    message(FATAL_ERROR "Could not find GNU-EFI CRT")
+endif ()
+find_file(EFI_LD_SCRIPT "elf_${CMAKE_HOST_SYSTEM_PROCESSOR}_efi.lds"
+        PATHS "${gnuefi_SOURCE_DIR}/gnuefi"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (NOT EFI_LD_SCRIPT)
+    message(FATAL_ERROR "Could not find GNU-EFI LD script")
+endif ()
+find_file(EFI_LIBRARY "libgnuefi.a"
+        PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (NOT EFI_LD_SCRIPT)
+    message(FATAL_ERROR "Could not find GNU-EFI library")
+endif ()
 
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
     target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
-    target_link_libraries(${target} ${access} "${EFI_TARGET_BUILD_DIR}/gnuefi/libgnuefi.a")
+    target_link_options(${target} ${access} -T${EFI_LD_SCRIPT} ${EFI_CRT})
+    target_link_libraries(${target} ${access} ${EFI_LIBRARY})
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)

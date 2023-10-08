@@ -55,10 +55,6 @@ if (NOT CMX_GNUEFI_FETCHED)
 endif () # CMX_GNUEFI_FETCHED
 
 macro(cmx_add_efi target arch)
-    if(NOT "${arch}" STREQUAL "${EFI_TARGET_ARCH}")
-        return()
-    endif ()
-
     find_program(MAKE "make")
     if (NOT MAKE)
         message(FATAL_ERROR "Could not find make, make sure it's installed")
@@ -112,11 +108,7 @@ macro(cmx_add_efi target arch)
     endif ()
 endmacro()
 
-cmx_add_efi(efi-x86-64 x86_64)
-cmx_add_efi(efi-x86 x86)
-cmx_add_efi(efi-arm64 arm64)
-cmx_add_efi(efi-arm arm)
-# cmx_add_efi(efi-riscv64 riscv64)
+cmx_add_efi(efi "${EFI_TARGET_ARCH}")
 
 set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_MAPPED_TARGET_ARCH}")
 find_file(EFI_CRT "crt0-efi-${EFI_MAPPED_TARGET_ARCH}.o"

@@ -107,9 +107,9 @@ macro(cmx_add_efi target arch)
 endmacro()
 
 cmx_add_efi(efi-x86-64 x86_64)
-# cmx_add_efi(efi-x86 x86)
-# cmx_add_efi(efi-arm64 arm64)
-# cmx_add_efi(efi-arm arm)
+cmx_add_efi(efi-x86 x86)
+cmx_add_efi(efi-arm64 arm64)
+cmx_add_efi(efi-arm arm)
 # cmx_add_efi(efi-riscv64 riscv64)
 
 set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_BUILD_DIR_NAME}")
@@ -143,7 +143,7 @@ find_file(EFI_LIBRARY "libgnuefi.a"
         NO_CMAKE_SYSTEM_PATH
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH)
-if (NOT EFI_LD_SCRIPT)
+if (NOT EFI_LIBRARY)
     message(FATAL_ERROR "Could not find GNU-EFI library")
 endif ()
 

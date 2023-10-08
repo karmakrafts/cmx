@@ -5,6 +5,7 @@ macro(cmx_set_freestanding target access)
 		message(FATAL_ERROR "Freestanding compilation with MSVC is not supported right now")
 	endif()
 	target_compile_options(${target} ${access}
+		-fPIC
 		-fshort-wchar
 		-ffreestanding
 		-fno-stack-protector
@@ -15,8 +16,7 @@ macro(cmx_set_freestanding target access)
 		-Wl,-z,norelro
 		-Wl,-z,notext
 		-Wl,-Bsymbolic)
-	if(DEFINED CMX_COMPILER_GCC)
-		target_link_options(${target} ${access}
-			-znocombreloc)
+	if(CMX_COMPILER_GCC)
+		target_link_options(${target} ${access} -znocombreloc)
 	endif()
 endmacro()

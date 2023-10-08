@@ -104,6 +104,7 @@ else ()
 endif ()
 
 set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_MAPPED_TARGET_ARCH}")
+
 find_file(EFI_CRT "crt0-efi-${EFI_MAPPED_TARGET_ARCH}.o"
         PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
         NO_CMAKE_ENVIRONMENT_PATH
@@ -116,6 +117,20 @@ if (EFI_CRT)
     message(STATUS "Found GNU-EFI CRT at ${EFI_CRT}")
 else ()
     message(FATAL_ERROR "Could not find GNU-EFI CRT")
+endif ()
+
+find_file(EFI_RELOC "reloc_${EFI_MAPPED_TARGET_ARCH}.o"
+        PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (EFI_RELOC)
+    message(STATUS "Found GNU-EFI relocator at ${EFI_RELOC}")
+else ()
+    message(FATAL_ERROR "Could not find GNU-EFI relocator")
 endif ()
 
 find_file(EFI_LD_SCRIPT "elf_${EFI_MAPPED_TARGET_ARCH}_efi.lds"
@@ -141,7 +156,8 @@ macro(cmx_include_efi target access)
             -lgnuefi
             -lefi
             -T${EFI_LD_SCRIPT}
-            ${EFI_CRT})
+            ${EFI_CRT}
+            ${EFI_RELOC})
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)

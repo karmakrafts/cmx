@@ -3,46 +3,14 @@ include_guard()
 include(ProcessorCount)
 ProcessorCount(EFI_NUM_THREADS)
 
-# FIXME: RISCV support disabled for now due to https://sourceforge.net/p/gnu-efi/bugs/36/ re-appearing
+find_program(MAKE "make")
+if (NOT MAKE)
+    message(FATAL_ERROR "Could not find make, make sure it's installed")
+endif ()
 
 set(CMX_GNUEFI_VERSION "3.0.17")
 set(CMX_GNUEFI_CHECKSUM "832496719182e7d6a4b12bc7c0b534d2")
 set(CMX_GNUEFI_FETCHED OFF)
-
-if ("${CMX_CPU_ARCH}" STREQUAL "x86_64")
-    set(EFI_HOST_ARCH "x86_64")
-elseif ("${CMX_CPU_ARCH}" STREQUAL "x86")
-    set(EFI_HOST_ARCH "i386")
-elseif ("${CMX_CPU_ARCH}" STREQUAL "arm64")
-    set(EFI_HOST_ARCH "armv8")
-elseif ("${CMX_CPU_ARCH}" STREQUAL "arm")
-    set(EFI_HOST_ARCH "armv7")
-    # elseif ("${CMX_CPU_ARCH}" STREQUAL "riscv64")
-    #     set(EFI_HOST_ARCH "riscv64")
-else ()
-    message(FATAL_ERROR "CPU architecture ${CMX_CPU_ARCH} is not supported right now")
-endif ()
-
-if (NOT EFI_TARGET_ARCH)
-    message("No target architecture specified for GNU-EFI, defaulting to ${CMX_CPU_ARCH}")
-    set(EFI_TARGET_ARCH "${CMX_CPU_ARCH}")
-endif ()
-
-if ("${EFI_TARGET_ARCH}" STREQUAL "x86_64")
-    set(EFI_MAPPED_TARGET_ARCH "x86_64")
-    set(EFI_TARGET_64_BIT ON)
-elseif ("${EFI_TARGET_ARCH}" STREQUAL "x86")
-    set(EFI_MAPPED_TARGET_ARCH "ia32")
-elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
-    set(EFI_MAPPED_TARGET_ARCH "aarch64")
-    set(EFI_TARGET_64_BIT ON)
-elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm")
-    set(EFI_MAPPED_TARGET_ARCH "arm")
-    # elseif ("${EFI_TARGET_ARCH}" STREQUAL "riscv64")
-    #     set(EFI_MAPPED_TARGET_ARCH "riscv64")
-else ()
-    message(FATAL_ERROR "CPU architecture ${EFI_TARGET_ARCH} is not supported right now")
-endif ()
 
 if (NOT CMX_GNUEFI_FETCHED)
     FetchContent_Declare(
@@ -54,61 +22,60 @@ if (NOT CMX_GNUEFI_FETCHED)
     set(CMX_GNUEFI_FETCHED ON)
 endif () # CMX_GNUEFI_FETCHED
 
-macro(cmx_add_efi target arch)
-    find_program(MAKE "make")
-    if (NOT MAKE)
-        message(FATAL_ERROR "Could not find make, make sure it's installed")
-    endif ()
+if (NOT EFI_TARGET_ARCH)
+    message("No target architecture specified for GNU-EFI, defaulting to ${CMX_CPU_ARCH}")
+    set(EFI_TARGET_ARCH "${CMX_CPU_ARCH}")
+endif ()
 
-    if ("${arch}" STREQUAL "x86_64")
-        set(target_arch "x86_64")
-        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
-            set(cross_compile "x86_64-linux-gnu-")
-        endif ()
-    elseif ("${arch}" STREQUAL "x86")
-        set(target_arch "i386")
-        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
-            set(cross_compile "i686-linux-gnu-")
-        endif ()
-    elseif ("${arch}" STREQUAL "arm64")
-        set(target_arch "armv8")
-        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
-            set(cross_compile "aarch64-linux-gnu-")
-        endif ()
-    elseif ("${arch}" STREQUAL "arm")
-        set(target_arch "armv7")
-        if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
-            set(cross_compile "arm-linux-gnueabihf-")
-        endif ()
-        # elseif ("${arch}" STREQUAL "riscv64")
-        #     set(target_arch "riscv64")
-        #     if (NOT "${EFI_HOST_ARCH}" STREQUAL "${target_arch}")
-        #         set(cross_compile "riscv64-linux-gnu-")
-        #     endif ()
-    else ()
-        message(FATAL_ERROR "CPU architecture ${arch} is not supported right now")
-    endif ()
+if ("${CMX_CPU_ARCH}" STREQUAL "x86_64")
+    set(EFI_HOST_ARCH "x86_64")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "x86")
+    set(EFI_HOST_ARCH "i386")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "arm64")
+    set(EFI_HOST_ARCH "armv8")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "arm")
+    set(EFI_HOST_ARCH "armv7")
+elseif ("${CMX_CPU_ARCH}" STREQUAL "riscv64")
+    set(EFI_HOST_ARCH "riscv64")
+else ()
+    message(FATAL_ERROR "CPU architecture ${CMX_CPU_ARCH} is not supported right now")
+endif ()
 
-    message(STATUS "Setting up GNU-EFI for ${target_arch}..")
-    if (cross_compile)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E env
-                HOSTARCH=${EFI_HOST_ARCH}
-                ARCH=${target_arch}
-                CROSS_COMPILE=${cross_compile}
-                ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
-                WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
-                OUTPUT_QUIET)
-    else ()
-        execute_process(COMMAND ${CMAKE_COMMAND} -E env
-                HOSTARCH=${EFI_HOST_ARCH}
-                ARCH=${target_arch}
-                ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
-                WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
-                OUTPUT_QUIET)
-    endif ()
-endmacro()
+if ("${EFI_TARGET_ARCH}" STREQUAL "x86_64")
+    set(EFI_MAPPED_TARGET_ARCH "x86_64")
+    set(EFI_MAPPED_TARGET_ARCH2 "x86_64")
+    set(EFI_CROSS_COMPILE "x86_64-linux-gnu-")
+    set(EFI_TARGET_64_BIT ON)
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "x86")
+    set(EFI_MAPPED_TARGET_ARCH "ia32")
+    set(EFI_MAPPED_TARGET_ARCH2 "i386")
+    set(EFI_CROSS_COMPILE "i686-linux-gnu-")
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
+    set(EFI_MAPPED_TARGET_ARCH "aarch64")
+    set(EFI_MAPPED_TARGET_ARCH2 "armv8")
+    set(EFI_CROSS_COMPILE "aarch64-linux-gnu-")
+    set(EFI_TARGET_64_BIT ON)
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm")
+    set(EFI_MAPPED_TARGET_ARCH "arm")
+    set(EFI_MAPPED_TARGET_ARCH2 "armv7")
+    set(EFI_CROSS_COMPILE "arm-linux-gnueabihf-")
+elseif ("${EFI_TARGET_ARCH}" STREQUAL "riscv64")
+    set(EFI_MAPPED_TARGET_ARCH "riscv64")
+    set(EFI_MAPPED_TARGET_ARCH2 "riscv64")
+    set(EFI_CROSS_COMPILE "riscv64-linux-gnu-")
+    set(EFI_TARGET_64_BIT ON)
+else ()
+    message(FATAL_ERROR "CPU architecture ${EFI_TARGET_ARCH} is not supported right now")
+endif ()
 
-cmx_add_efi(efi "${EFI_TARGET_ARCH}")
+message(STATUS "Setting up GNU-EFI for ${EFI_MAPPED_TARGET_ARCH2}..")
+execute_process(COMMAND ${CMAKE_COMMAND} -E env
+        HOSTARCH=${EFI_HOST_ARCH}
+        ARCH=${EFI_MAPPED_TARGET_ARCH2}
+        CROSS_COMPILE=${EFI_CROSS_COMPILE}
+        ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
+        WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
+        OUTPUT_QUIET)
 
 set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_MAPPED_TARGET_ARCH}")
 find_file(EFI_CRT "crt0-efi-${EFI_MAPPED_TARGET_ARCH}.o"

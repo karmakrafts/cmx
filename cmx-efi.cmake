@@ -46,43 +46,62 @@ endif ()
 if ("${EFI_TARGET_ARCH}" STREQUAL "x86_64")
     set(EFI_MAPPED_TARGET_ARCH "x86_64")
     set(EFI_MAPPED_TARGET_ARCH2 "x86_64")
-    set(EFI_CROSS_COMPILE "x86_64-linux-gnu-")
     set(EFI_BOOT_FILE_NAME "BOOTX64.EFI")
     set(EFI_TARGET_64_BIT ON)
+    if (NOT "${EFI_TARGET_ARCH}" STREQUAL "${CMX_CPU_ARCH}")
+        set(EFI_CROSS_COMPILE "x86_64-linux-gnu-")
+    endif ()
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "x86")
     set(EFI_MAPPED_TARGET_ARCH "ia32")
     set(EFI_MAPPED_TARGET_ARCH2 "i386")
-    set(EFI_CROSS_COMPILE "i686-linux-gnu-")
     set(EFI_BOOT_FILE_NAME "BOOTIA32.EFI")
+    if (NOT "${EFI_TARGET_ARCH}" STREQUAL "${CMX_CPU_ARCH}")
+        set(EFI_CROSS_COMPILE "i686-linux-gnu-")
+    endif ()
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
     set(EFI_MAPPED_TARGET_ARCH "aarch64")
     set(EFI_MAPPED_TARGET_ARCH2 "armv8")
-    set(EFI_CROSS_COMPILE "aarch64-linux-gnu-")
     set(EFI_BOOT_FILE_NAME "BOOTAA64.EFI")
     set(EFI_TARGET_64_BIT ON)
+    if (NOT "${EFI_TARGET_ARCH}" STREQUAL "${CMX_CPU_ARCH}")
+        set(EFI_CROSS_COMPILE "aarch64-linux-gnu-")
+    endif ()
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm")
     set(EFI_MAPPED_TARGET_ARCH "arm")
     set(EFI_MAPPED_TARGET_ARCH2 "armv7")
-    set(EFI_CROSS_COMPILE "arm-linux-gnueabihf-")
     set(EFI_BOOT_FILE_NAME "BOOTARM.EFI")
+    if (NOT "${EFI_TARGET_ARCH}" STREQUAL "${CMX_CPU_ARCH}")
+        set(EFI_CROSS_COMPILE "arm-linux-gnueabihf-")
+    endif ()
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "riscv64")
     set(EFI_MAPPED_TARGET_ARCH "riscv64")
     set(EFI_MAPPED_TARGET_ARCH2 "riscv64")
-    set(EFI_CROSS_COMPILE "riscv64-linux-gnu-")
     set(EFI_BOOT_FILE_NAME "BOOTRISCV64.EFI")
     set(EFI_TARGET_64_BIT ON)
+    if (NOT "${EFI_TARGET_ARCH}" STREQUAL "${CMX_CPU_ARCH}")
+        set(EFI_CROSS_COMPILE "riscv64-linux-gnu-")
+    endif ()
 else ()
     message(FATAL_ERROR "CPU architecture ${EFI_TARGET_ARCH} is not supported right now")
 endif ()
 
 message(STATUS "Setting up GNU-EFI for ${EFI_MAPPED_TARGET_ARCH2}..")
-execute_process(COMMAND ${CMAKE_COMMAND} -E env
-        HOSTARCH=${EFI_HOST_ARCH}
-        ARCH=${EFI_MAPPED_TARGET_ARCH2}
-        CROSS_COMPILE=${EFI_CROSS_COMPILE}
-        ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
-        WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
-        OUTPUT_QUIET)
+if (DEFINED EFI_CROSS_COMPILE)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E env
+            HOSTARCH=${EFI_HOST_ARCH}
+            ARCH=${EFI_MAPPED_TARGET_ARCH2}
+            CROSS_COMPILE=${EFI_CROSS_COMPILE}
+            ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
+            WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
+            OUTPUT_QUIET)
+else ()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E env
+            HOSTARCH=${EFI_HOST_ARCH}
+            ARCH=${EFI_MAPPED_TARGET_ARCH2}
+            ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
+            WORKING_DIRECTORY ${gnuefi_BINARY_DIR}
+            OUTPUT_QUIET)
+endif ()
 
 set(EFI_TARGET_BUILD_DIR "${gnuefi_BINARY_DIR}/${EFI_MAPPED_TARGET_ARCH}")
 find_file(EFI_CRT "crt0-efi-${EFI_MAPPED_TARGET_ARCH}.o"
@@ -127,11 +146,29 @@ else ()
     message(FATAL_ERROR "Could not find GNU-EFI library")
 endif ()
 
+find_file(EFI_LIBRARY2 "libefi.a"
+        PATHS "${EFI_TARGET_BUILD_DIR}/lib"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (EFI_LIBRARY2)
+    message(STATUS "Found GNU-EFI library at ${EFI_LIBRARY2}")
+else ()
+    message(FATAL_ERROR "Could not find GNU-EFI library")
+endif ()
+
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
     target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
-    target_link_options(${target} ${access} -T${EFI_LD_SCRIPT} ${EFI_CRT})
-    target_link_libraries(${target} ${access} ${EFI_LIBRARY})
+    target_link_options(${target} ${access}
+            -Wl,-L${EFI_TARGET_BUILD_DIR}/gnuefi
+            -Wl,-L${EFI_TARGET_BUILD_DIR}/lib
+            -T${EFI_LD_SCRIPT}
+            ${EFI_CRT})
+    target_link_libraries(${target} ${access} ${EFI_LIBRARY} ${EFI_LIBRARY2})
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)

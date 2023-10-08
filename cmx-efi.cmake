@@ -24,12 +24,6 @@ if (NOT CMX_GNUEFI_FETCHED)
     set(CMX_GNUEFI_FETCHED ON)
 endif () # CMX_GNUEFI_FETCHED
 
-if (CMX_COMPILER_CLANG)
-    # Force the use of LLD when using Clang, disable relro
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
-endif ()
-
 if (NOT EFI_TARGET_ARCH)
     message("No target architecture specified for GNU-EFI, defaulting to ${CMX_CPU_ARCH}")
     set(EFI_TARGET_ARCH "${CMX_CPU_ARCH}")
@@ -100,20 +94,6 @@ else ()
     message(FATAL_ERROR "Could not find GNU-EFI CRT")
 endif ()
 
-find_file(EFI_RELOC "reloc_${EFI_MAPPED_TARGET_ARCH}.o"
-        PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
-        NO_CMAKE_ENVIRONMENT_PATH
-        NO_CMAKE_FIND_ROOT_PATH
-        NO_CMAKE_PATH
-        NO_CMAKE_SYSTEM_PATH
-        NO_DEFAULT_PATH
-        NO_SYSTEM_ENVIRONMENT_PATH)
-if (EFI_RELOC)
-    message(STATUS "Found GNU-EFI relocation blob at ${EFI_RELOC}")
-else ()
-    message(FATAL_ERROR "Could not find GNU-EFI relocation blob")
-endif ()
-
 find_file(EFI_LD_SCRIPT "elf_${EFI_MAPPED_TARGET_ARCH}_efi.lds"
         PATHS "${gnuefi_SOURCE_DIR}/gnuefi"
         NO_CMAKE_ENVIRONMENT_PATH
@@ -145,9 +125,13 @@ endif ()
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
     target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
-    target_link_options(${target} ${access} -T${EFI_LD_SCRIPT})
+    target_link_options(${target} ${access} -shared -T${EFI_LD_SCRIPT} ${EFI_CRT})
     target_link_libraries(${target} ${access} ${EFI_LIBRARY})
     target_compile_definitions(${target} ${access} EFI_FUNCTION_WRAPPER)
+    if (CMX_COMPILER_CLANG)
+        # Force the use of LLD when using Clang, disable relro
+        target_compile_options(${target} ${access} "-fuse-ld=lld -Wl,-z,norelro")
+    endif ()
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)
     endif ()

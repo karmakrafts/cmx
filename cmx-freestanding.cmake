@@ -10,8 +10,7 @@ macro(cmx_set_freestanding target access)
 		-fPIC
 		-fno-stack-protector
 		-fno-strict-aliasing
-		-funsigned-char
-		-mno-red-zone)
+		-funsigned-char)
 	target_link_options(${target} ${access}
 		-nostdlib
 		-Wl,-Bsymbolic)

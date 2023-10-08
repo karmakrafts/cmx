@@ -98,14 +98,14 @@ macro(cmx_add_efi target arch)
                 HOSTARCH=${EFI_HOST_ARCH}
                 ARCH=${target_arch}
                 CROSS_COMPILE=${cross_compile}
-                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile" -- -j ${EFI_NUM_THREADS}
+                ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
                 WORKING_DIRECTORY ${EFI_BUILD_DIR}
                 OUTPUT_QUIET)
     else ()
         execute_process(COMMAND ${CMAKE_COMMAND} -E env
                 HOSTARCH=${EFI_HOST_ARCH}
                 ARCH=${target_arch}
-                ${MAKE} -f "${gnuefi_SOURCE_DIR}/Makefile" -- -j ${EFI_NUM_THREADS}
+                ${MAKE} -j ${EFI_NUM_THREADS} -f "${gnuefi_SOURCE_DIR}/Makefile"
                 WORKING_DIRECTORY ${EFI_BUILD_DIR}
                 OUTPUT_QUIET)
     endif ()

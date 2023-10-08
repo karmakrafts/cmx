@@ -147,15 +147,44 @@ else ()
     message(FATAL_ERROR "Could not find GNU-EFI LD script")
 endif ()
 
+find_file(EFI_LIBRARY "libgnuefi.a"
+        PATHS "${EFI_TARGET_BUILD_DIR}/gnuefi"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (EFI_LIBRARY)
+    message(STATUS "Found GNU-EFI library at ${EFI_LIBRARY}")
+else ()
+    message(FATAL_ERROR "Could not find GNU-EFI library")
+endif ()
+add_library(gnuefi STATIC IMPORTED)
+set_target_properties(gnuefi PROPERTIES IMPORTED_LOCATION ${EFI_LIBRARY})
+
+find_file(EFI_LIBRARY2 "libefi.a"
+        PATHS "${EFI_TARGET_BUILD_DIR}/lib"
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+        NO_CMAKE_PATH
+        NO_CMAKE_SYSTEM_PATH
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH)
+if (EFI_LIBRARY2)
+    message(STATUS "Found GNU-EFI library at ${EFI_LIBRARY2}")
+else ()
+    message(FATAL_ERROR "Could not find GNU-EFI library")
+endif ()
+add_library(efi STATIC IMPORTED)
+set_target_properties(efi PROPERTIES IMPORTED_LOCATION ${EFI_LIBRARY2})
+
 macro(cmx_include_efi target access)
     cmx_set_freestanding(${target} ${access})
     target_include_directories(${target} ${access} "${gnuefi_SOURCE_DIR}/inc")
+    target_link_libraries(${target} ${access} gnuefi efi)
     target_link_options(${target} ${access}
             -static
-            -Wl,-L${EFI_TARGET_BUILD_DIR}/gnuefi
-            -Wl,-L${EFI_TARGET_BUILD_DIR}/lib
-            -lgnuefi
-            -lefi
             -T${EFI_LD_SCRIPT}
             ${EFI_CRT}
             ${EFI_RELOC})

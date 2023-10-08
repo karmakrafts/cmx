@@ -30,10 +30,12 @@ endif ()
 
 if ("${EFI_TARGET_ARCH}" STREQUAL "x86_64")
     set(EFI_MAPPED_TARGET_ARCH "x86_64")
+    set(EFI_TARGET_64_BIT ON)
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "x86")
     set(EFI_MAPPED_TARGET_ARCH "ia32")
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm64")
     set(EFI_MAPPED_TARGET_ARCH "aarch64")
+    set(EFI_TARGET_64_BIT ON)
 elseif ("${EFI_TARGET_ARCH}" STREQUAL "arm")
     set(EFI_MAPPED_TARGET_ARCH "arm")
     # elseif ("${EFI_TARGET_ARCH}" STREQUAL "riscv64")
@@ -53,6 +55,10 @@ if (NOT CMX_GNUEFI_FETCHED)
 endif () # CMX_GNUEFI_FETCHED
 
 macro(cmx_add_efi target arch)
+    if(NOT "${arch}" STREQUAL "${EFI_TARGET_ARCH}")
+        return()
+    endif ()
+
     find_program(MAKE "make")
     if (NOT MAKE)
         message(FATAL_ERROR "Could not find make, make sure it's installed")

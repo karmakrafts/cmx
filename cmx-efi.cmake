@@ -179,6 +179,11 @@ macro(cmx_include_efi target access)
     endif ()
 endmacro()
 
+find_program(OBJCOPY "${EFI_CROSS_COMPILE}objcopy")
+if (NOT OBJCOPY)
+    message(FATAL_ERROR "Could not find objcopy, make it is installed")
+endif ()
+
 macro(cmx_add_efi_executable target access)
     set(${target}_source_files)
     foreach (arg IN ITEMS ${ARGN})
@@ -191,7 +196,7 @@ macro(cmx_add_efi_executable target access)
     cmx_include_efi(${target} ${access})
     target_link_options(${target} ${access} -T${EFI_LD_SCRIPT} ${EFI_CRT})
     add_custom_command(TARGET ${target} POST_BUILD
-            COMMAND objcopy
+            COMMAND ${OBJCOPY}
             ARGS
             -j .text
             -j .sdata
@@ -201,7 +206,7 @@ macro(cmx_add_efi_executable target access)
             -j .rel
             -j .rela
             -j .reloc
-            --target=efi-app-${CMAKE_HOST_SYSTEM_PROCESSOR}
+            --target=efi-app-${EFI_TARGET_ARCH}
             $<TARGET_FILE:${target}> ${target}.efi
             DEPENDS ${target}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

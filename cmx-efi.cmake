@@ -211,7 +211,7 @@ macro(cmx_add_efi_executable target access)
             -j .rel
             -j .rela
             -j .reloc
-            --target=efi-app-${EFI_OBJCOPY_TARGET}
+            -O binary
             $<TARGET_FILE:${target}> ${target}.efi
             DEPENDS ${target}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

@@ -121,7 +121,9 @@ find_file(EFI_CRT "crt0-efi-${EFI_MAPPED_TARGET_ARCH}.o"
         NO_CMAKE_SYSTEM_PATH
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH)
-if (NOT EFI_CRT)
+if (EFI_CRT)
+    message(STATUS "Found GNU-EFI CRT at ${EFI_CRT}")
+else ()
     message(FATAL_ERROR "Could not find GNU-EFI CRT")
 endif ()
 find_file(EFI_LD_SCRIPT "elf_${EFI_MAPPED_TARGET_ARCH}_efi.lds"
@@ -132,7 +134,9 @@ find_file(EFI_LD_SCRIPT "elf_${EFI_MAPPED_TARGET_ARCH}_efi.lds"
         NO_CMAKE_SYSTEM_PATH
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH)
-if (NOT EFI_LD_SCRIPT)
+if (EFI_LD_SCRIPT)
+    message(STATUS "Found GNU-EFI linker script at ${EFI_LD_SCRIPT}")
+else ()
     message(FATAL_ERROR "Could not find GNU-EFI LD script")
 endif ()
 find_file(EFI_LIBRARY "libgnuefi.a"
@@ -143,7 +147,9 @@ find_file(EFI_LIBRARY "libgnuefi.a"
         NO_CMAKE_SYSTEM_PATH
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH)
-if (NOT EFI_LIBRARY)
+if (EFI_LIBRARY)
+    message(STATUS "Found GNU-EFI library at ${EFI_LIBRARY}")
+else ()
     message(FATAL_ERROR "Could not find GNU-EFI library")
 endif ()
 

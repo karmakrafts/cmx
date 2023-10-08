@@ -10,8 +10,8 @@ if (NOT MAKE)
     message(FATAL_ERROR "Could not find make, make sure it's installed")
 endif ()
 
-set(CMX_GNUEFI_VERSION "3.0.17")
-set(CMX_GNUEFI_CHECKSUM "832496719182e7d6a4b12bc7c0b534d2")
+set(CMX_GNUEFI_VERSION "3.0.13")
+set(CMX_GNUEFI_CHECKSUM "8ec4221f505c78e6fc375c2fd7f0c549")
 set(CMX_GNUEFI_FETCHED OFF)
 
 if (NOT CMX_GNUEFI_FETCHED)

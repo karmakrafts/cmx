@@ -24,6 +24,12 @@ if (NOT CMX_GNUEFI_FETCHED)
     set(CMX_GNUEFI_FETCHED ON)
 endif () # CMX_GNUEFI_FETCHED
 
+if (CMX_COMPILER_CLANG)
+    # Force the use of LLD when using Clang, disable relro
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=lld -Wl,-z,norelro")
+endif ()
+
 if (NOT EFI_TARGET_ARCH)
     message("No target architecture specified for GNU-EFI, defaulting to ${CMX_CPU_ARCH}")
     set(EFI_TARGET_ARCH "${CMX_CPU_ARCH}")

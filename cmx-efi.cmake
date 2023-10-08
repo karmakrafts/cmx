@@ -137,7 +137,6 @@ macro(cmx_include_efi target access)
         # Force the use of LLD when using Clang, disable relro/textrel
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=lld")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=lld")
-        target_compile_options(${target} ${access} -z norelro)
     endif ()
     if (DEFINED CMX_BUILD_DEBUG)
         target_compile_options(${target} ${access} -g1 -ggdb)

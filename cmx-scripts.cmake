@@ -21,6 +21,8 @@ macro(cmx_include_scripts)
         else() # CMX_BUILD_DEBUG
             set(USE_SANITIZER "")
         endif() # CMX_BUILD_DEBUG
-        include(sanitizers)
+        if (NOT CMX_COMPILER_CLANG)
+            include(sanitizers)
+        endif()
     endif () # CMX_COMPILER_MSVC
 endmacro()
